@@ -11,14 +11,23 @@
 
         <script>
             var url = "./../../Web-ser/";
-            $(document).ready(function() {
-                $.getJSON(url + "Crime/query", function(data) {
-                    $.each(data, function() {
+
+            $(document).ready(function () {
+                $('.filter').on("load", function() {
+                    console.log("a");
+                });
+
+                $.getJSON(url + "Crime/query", function (data) {
+                    $.each(data, function () {
                         $('#war').add("<div></div>");
                         $('#war > div').html(JSON.stringify(this));
                     });
 
                 });
+
+
+
+
             });
         </script>
 
@@ -37,7 +46,12 @@
         </style>
     </head>
     <body>
-        <div id="menu">Menu</div>
+        <div id="menu">
+            <div>Menu</div>
+            <select class="filter" size="5" itemid="Type">
+                <option value="0">Type1</option>
+            </select>
+        </div>
         <div id="war"></div>
     </body>
 </html>
