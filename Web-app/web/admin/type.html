@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <link rel="import" type="text/html" href="../html/lib/include.html" />
+
+    </head>
+    <body>
+        <div id="PeopleTableContainer"></div>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#PeopleTableContainer').jtable({
+                    title: 'Table of people',
+                    actions: {
+                        listAction: 'test.json'
+                    },
+                    fields: {
+                        PersonId: {
+                            key: true,
+                            list: false
+                        },
+                        Name: {
+                            title: 'Author Name',
+                            width: '40%'
+                        }
+                    }
+                });
+                //Load person list from server
+                $('#PeopleTableContainer').jtable('load');
+            });
+        </script>
+    </body>
+</html>
