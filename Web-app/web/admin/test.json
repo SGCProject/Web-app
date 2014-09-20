@@ -1,8 +1,18 @@
-{
-    "Result": "OK",
-    "Records": [{
-            "Name": "Benjamin Button"
-        }, {
-            "Name": "Douglas Adams"
-        }]
-}
+[{
+        "Records": [{
+                "Name": "Benjamin Button"
+            }, {
+                "Name": "Douglas Adams"
+            }],
+        "Result": "OK"
+    },
+    {
+        "Records": [{
+                "pk": "25",
+                "name": "Type1"
+            }, {
+                "pk": "26",
+                "name": "ประเภท 2"
+            }],
+        "Result": "OK"
+    }]
