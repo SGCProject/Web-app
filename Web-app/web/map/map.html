@@ -3,22 +3,42 @@
     <head>
         <title>TODO supply a title</title>
         <link rel="import" type="text/html" href="../html/lib/include.html" />
+        <!-- Include Google Map -->
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1j-b_PdubJrPoK9rX26VKRnWUpR4nd9c"></script>
 
-        <script>            
-            $(document).ready(function () {
-
-                $.getJSON(url + "Crime/query", function (data) {
-                    $.each(data, function () {
-                        $('#war').add("<div></div>");
-                        $('#war > div').html(JSON.stringify(this));
-                    });
-
+        <!-- Include gMap3 -->
+        <script src="../js/libs/gmap3/gmap3.min.js" type="text/javascript"></script>
+        <script>
+            $(function () {
+                $("#gmap").gmap3({
+                    map: {
+                        options: {
+                            zoom: 12,
+                            center: [14.0357283, 100.734549]
+                        }
+                    }
                 });
+            });
 
-
-
-
-            }); 
+            $(document).ready(function () {
+                loadMarkers();
+                function loadMarkers() {
+                    $.post(url + "Crime/query", function (data) {
+                        $.each(data.Records, function () {
+                            $("#gmap").gmap3({
+                                marker: {
+                                    values: [
+                                        {
+                                            latLng: [this.crime_lat, this.crime_lng],
+                                            options: {icon: "/Web-app/img/marker/" + this.type_pk + ".png"}
+                                        }
+                                    ]
+                                }
+                            });
+                        });
+                    });
+                }
+            });
         </script>
 
         <style>
@@ -29,9 +49,9 @@
                 width: 30%;
                 height: 100%;
             }
-            #war {
-                width: 70%;
-                height: 100%;
+            #gmap {
+                width: 1024px;
+                height: 800px;
             }
         </style>
     </head>
@@ -42,7 +62,7 @@
                 <option value="[pk]">[name]</option>
             </select>
         </div>
-        <div id="war"></div>
+        <div id="gmap" class="gmap3"></div>
     </body>
     <script src="../js/libs/my.js" type="text/javascript"></script>
 </html>

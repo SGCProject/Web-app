@@ -21,6 +21,13 @@
                         name: {
                             title: 'Author Name',
                             width: '40%'
+                        },
+                        image: {
+                            title: 'Photo',
+                            width: '40%',
+                            display: function (data) {
+                                return '<img src="' + "/Web-app/img/marker/" + data.record.pk + '.png" />';
+                            }
                         }
                     }
                 });

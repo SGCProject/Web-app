@@ -12,17 +12,18 @@ function showLookup() {
         var tmp = txt.replace(/\"/g, "\\'");
         tmp = tmp.replace(/\[/g, '" + this.');
         tmp = tmp.replace(/]/g, ' + "');
-        $.getJSON(url + item + "/query", function (data) {
-            el.attr("size", Object.keys(data).length);
-            $.each(data, function () {
 
-
-                tmp = eval("\"" + tmp + "\"");
-
-                result += tmp;
-            });
-            el.empty();
-            el.html(result);
+        $.ajax({
+            type: "POST",
+            url: url + item + "/query",
+            success: function (data) {
+                el.attr("size", Object.keys(data).length);
+                $.each(data.Records, function () {
+                    result += eval("\"" + tmp + "\"");
+                });
+                el.empty();
+                el.html(result);
+            }
         });
     });
 }
