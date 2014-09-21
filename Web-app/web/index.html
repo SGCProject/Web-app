@@ -1,11 +1,26 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>TODO supply a title</title>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  </head>
-  <body>
-      <div>TODO write content</div>
-  </body>
+    <head>
+        <title>TODO supply a title</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <script src="js/libs/jquery/jquery.js" type="text/javascript"></script>    
+        <script>
+            
+            $(function() {
+                var v = 0;
+                $('input').on("click", function() {
+                    v = 1;
+                });
+                setTimeout(function() {
+                    console.log(v);
+                }, 3000);
+                
+            });            
+        </script>
+    </head>
+    <body>
+        <input type="button" />
+    </body>
 </html>

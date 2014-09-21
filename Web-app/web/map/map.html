@@ -13,45 +13,66 @@
             $(document).ready(function () {
                 var map = $("#gmap");
 
-                console.log($(".showLookup").selectable());
+                $(".showLookup").selectable();
 
-
-
-                $(function () {
-                    map.gmap3({
-                        map: {
-                            options: {
-                                zoom: 12,
-                                center: [14.0357283, 100.734549]
-                            }
+                map.gmap3({
+                    map: {
+                        options: {
+                            zoom: 12,
+                            center: [14.0357283, 100.734549]
                         }
-                    });
+                    }
                 });
 
-                setTimeout(function () {
-                    console.log("clear");
-                    map.gmap3({
-                        clear: {
-                            name: "marker"
-                        }
-                    });
-                }, 10000);
-
                 $.post(url + "Crime/query", function (data) {
-                    $.each(data.Records, function () {
-                        map.gmap3({
-                            marker: {
-                                values: [
-                                    {
-                                        latLng: [this.crime_lat, this.crime_lng],
-                                        options: {
-                                            icon: "/Web-app/img/marker/" + this.type_pk + ".png"
-                                        }
-                                    }
-                                ]
-                            }
+                    var markers = data.Records;
+                    var clearList = new Array();
+                    
+                    $(".showLookup").on("mousedown", function () {
+                        var item = $(this);
+                        $(document).on("mouseup", function () {                            
+                            item.find('.ui-selected').each(function(data) {
+                                console.log(item.attr("itemId") + "_" + $(this).attr("pk"));
+                                clearList.push(item.attr("itemId") + "_" + $(this).attr("pk"));
+                            });
+
+                            console.log("Set Markers");
+                            setMarkers();
                         });
                     });
+
+                    setMarkers();
+                    function setMarkers() {
+                        map.gmap3({
+                            clear: {
+                                name: "marker"
+                            }
+                        });
+
+                        $.each(markers, function () {
+                            map.gmap3({
+                                marker: {
+                                    values: [
+                                        {
+                                            tag: [
+                                                "Type_" + this.type_pk
+                                            ],
+                                            latLng: [this.crime_lat, this.crime_lng],
+                                            options: {
+                                                icon: "/Web-app/img/marker/" + this.type_pk + ".png"
+                                            }
+                                        }
+                                    ]
+                                }
+                            });
+                        });
+
+                        map.gmap3({
+                            clear: {
+                                tag: clearList
+                            }
+                        });
+                    }
                 });
             });
         </script>
@@ -80,7 +101,7 @@
         <div id="menu">
             <div>Menu</div>
             <ol class="showLookup" size="5" itemid="Type">
-                <li>[name]</li>
+                <li class="ui-widget-content ui-selected" pk="[pk]" >[name]</li>
             </ol>
         </div>
         <div id="gmap" class="gmap3"></div>
