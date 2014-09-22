@@ -26,20 +26,25 @@
 
                 $.post(url + "Crime/query", function (data) {
                     var markers = data.Records;
-                    var clearList = new Array();
-                    
-                    $(".showLookup").on("mousedown", function () {
-                        var item = $(this);
-                        $(document).on("mouseup", function () {                            
-                            item.find('.ui-selected').each(function(data) {
-                                console.log(item.attr("itemId") + "_" + $(this).attr("pk"));
-                                clearList.push(item.attr("itemId") + "_" + $(this).attr("pk"));
-                            });
+                    var clearList;
 
-                            console.log("Set Markers");
-                            setMarkers();
+                    $(".showLookup").on("selectableselected", function (event, ui) {
+                        var item = $(this);
+                        clearList = new Array();
+
+                        item.find('*').each(function (data) {
+                            clearList.push(item.attr("itemId") + "_" + $(this).attr("pk"));
                         });
+
+                        item.find('.ui-selected').each(function () {
+                            clearList.splice(clearList.indexOf(item.attr("itemId") + "_" + $(this).attr("pk")), 1);
+
+                        });
+
+                        console.log("Set Markers");
+                        setMarkers();
                     });
+
 
                     setMarkers();
                     function setMarkers() {
@@ -106,5 +111,5 @@
         </div>
         <div id="gmap" class="gmap3"></div>
     </body>
-    <script src="../js/libs/my.js" type="text/javascript"></script>    
+    <script src="../js/libs/my.js" type="text/javascript"></script>
 </html>
