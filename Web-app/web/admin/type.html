@@ -8,10 +8,10 @@
                 $('#PeopleTableContainer').jtable({
                     title: 'Table of people',
                     actions: {
-                        listAction: '/Web-ser/Type/query',
-                        createAction: '/Web-ser/Type/insert',
-                        updateAction: '/Web-ser/Type/update',
-                        deleteAction: '/Web-ser/Type/delete'
+                        listAction: '/Web-ser/rest/Type/query',
+                        createAction: '/Web-ser/rest/Type/insert',
+                        updateAction: '/Web-ser/rest/Type/update',
+                        deleteAction: '/Web-ser/rest/Type/delete'
                     },
                     fields: {
                         pk: {
@@ -26,7 +26,10 @@
                             title: 'Photo',
                             width: '40%',
                             display: function (data) {
-                                return '<img src="' + "/Web-app/img/marker/" + data.record.pk + '.png" />';
+                                return '<img src="' + "/Web-ser/image/marker/" + data.record.pk + '.png" />';
+                            },
+                            input: function (data) {
+                                return '<input type="file" name="image"/>';
                             }
                         }
                     }

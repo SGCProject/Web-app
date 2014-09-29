@@ -1,4 +1,4 @@
-var url = "./../../Web-ser/";
+var url = "./../../Web-ser/rest/";
 
 showLookup();
 function showLookup() {
