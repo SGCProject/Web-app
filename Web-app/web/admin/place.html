@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="import" type="text/html" href="../html/lib/include.html" />
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $('#TablePlace').jtable({
+                    title: 'ประเภทสภานที่',
+                    actions: {
+                        listAction: '/Web-ser/rest/Place/query',
+                        createAction: '/Web-ser/rest/Place/insert',
+                        updateAction: '/Web-ser/rest/Place/update',
+                        deleteAction: '/Web-ser/rest/Place/delete'
+                    },
+                    fields: {
+                        pk: {
+                            key: true,
+                            list: false
+                        },
+                        name: {
+                            title: 'ชื่อประเภทสภานที่',
+                            width: '40%'
+                        }
+                    }
+                });
+                //Load person list from server
+                $('#TablePlace').jtable('load');
+            });
+        </script>
+    </head>
+    <body>
+        <div id="TablePlace"></div>
+    </body>
+</html>

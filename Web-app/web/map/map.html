@@ -1,8 +1,15 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>TODO supply a title</title>
+    <head>        
         <link rel="import" type="text/html" href="../html/lib/include.html" />
+        <link href="../js/libs/jqueryui/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <style>
+            #feedback { font-size: 1.4em; }
+            #selectable .ui-selecting { background: #FECA40; }
+            #selectable .ui-selected { background: #F39814; color: white; }
+            #selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+            #selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }
+        </style>
         <!-- Include Google Map -->
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1j-b_PdubJrPoK9rX26VKRnWUpR4nd9c"></script>
         <!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;language=en">-->
@@ -64,7 +71,7 @@
                                             ],
                                             latLng: [this.crime_lat, this.crime_lng],
                                             options: {
-                                                icon: "/Web-app/img/marker/" + this.type_pk + ".png"
+                                                icon: "/Web-ser/image/marker/" + this.type_pk + ".png"
                                             }
                                         }
                                     ]
