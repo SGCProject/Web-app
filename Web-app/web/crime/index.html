@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="import" type="text/html" href="../html/lib/include.html" />
+        <script>
+            $(function() {
+                $.post(url + "Crime/query", {"pk":"2"}, function(data) {
+                    console.log(data);
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div></div>
+    </body>
+</html>

@@ -8,10 +8,10 @@
                 $('#PeopleTableContainer').jtable({
                     title: 'Table of people',
                     actions: {
-                        listAction: '/Web-ser/rest/Type/query',
-                        createAction: '/Web-ser/rest/Type/insert',
-                        updateAction: '/Web-ser/rest/Type/update',
-                        deleteAction: '/Web-ser/rest/Type/delete'
+                        listAction: url + 'Type/query',
+                        createAction: url + 'Type/insert',
+                        updateAction: url + 'Type/update',
+                        deleteAction: url + 'Type/delete'
                     },
                     fields: {
                         pk: {

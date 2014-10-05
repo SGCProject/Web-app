@@ -1,5 +1,3 @@
-var url = "./../../Web-ser/rest/";
-
 showLookup();
 function showLookup() {
     console.log("showLookup");

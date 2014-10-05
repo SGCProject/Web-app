@@ -6,31 +6,31 @@
         <link rel="import" type="text/html" href="../html/lib/include.html" />
         <script type="text/javascript">
             $(document).ready(function () {
-                $('#TablePlace').jtable({
-                    title: 'ประเภทสภานที่',
+                $('#PeopleTableContainer').jtable({
+                    title: 'ช่วงเวลา',
                     actions: {
-                        listAction: url + 'Place/query',
-                        createAction: url + 'Place/insert',
-                        updateAction: url + 'Place/update',
-                        deleteAction: url + 'Place/delete'
+                        listAction: url + 'Time/query',
+                        createAction: url + 'Time/insert',
+                        updateAction: url + 'Time/update',
+                        deleteAction: url + 'Time/delete'
                     },
                     fields: {
                         pk: {
                             key: true,
                             list: false
                         },
-                        name: {
-                            title: 'ชื่อประเภทสภานที่',
+                        time_lange: {
+                            title: 'ช่วงเวลา',
                             width: '40%'
                         }
                     }
                 });
                 //Load person list from server
-                $('#TablePlace').jtable('load');
+                $('#PeopleTableContainer').jtable('load');
             });
         </script>
     </head>
     <body>
-        <div id="TablePlace"></div>
+        <div id="PeopleTableContainer"></div>
     </body>
 </html>
