@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>        
+        <meta charset="UTF-8">
+        <link rel="import" type="text/html" href="../html/lib/include.html" />
+        <!--<link href="../js/libs/jqueryui/jquery-ui.css" rel="stylesheet" type="text/css"/>-->
+        <!-- Include Google Map -->
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1j-b_PdubJrPoK9rX26VKRnWUpR4nd9c"></script>
+        <!--<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false&amp;language=en">-->
+
+        <!-- Include gMap3 -->
+        <script src="../js/libs/gmap3/gmap3.min.js" type="text/javascript"></script>
+        <script>
+            var lat = 14.0357283;
+            var lng = 100.734549;
+            $(document).ready(function () {
+                var map = $("#gmapLatLngPicker");
+
+                map.gmap3({
+                    map: {
+                        options: {
+                            zoom: 12,
+                            center: [lat, lng]
+                        },
+                        events: {
+                            click: function (map, event) {
+                                latLng = event.latLng;
+                                $(this).gmap3({
+                                    clear: {
+                                        name: "marker"
+                                    },
+                                    marker: {
+                                        latLng: event.latLng
+                                    }
+                                });
+                            }
+                        }
+                    }
+                });
+
+                $("#dialogLatlngPicker").dialog({
+//                    autoOpen: false,
+                    resizable: false,
+                    draggable: false,
+                    width: 1024,
+                    buttons: [
+                        {
+                            text: "ตำแหน่งของฉัน",
+                            click: function () {
+                                map.gmap3({
+                                    getgeoloc: {
+                                        callback: function (a) {
+                                            latLng = a;
+                                            $(this).gmap3({
+                                                clear: {
+                                                    name: "marker"
+                                                },
+                                                marker: {
+                                                    latLng: latLng
+                                                }
+                                            });
+                                        }
+                                    }
+                                });
+                            }
+                        },
+                        {
+                            text: "ตกลง",
+                            click: function () {
+                                $(this).dialog("close");
+                            }
+                        },
+                        {
+                            text: "ยกเลิก",
+                            click: function () {
+                                map.gmap3({
+                                    clear: {
+                                        name: "marker"
+                                    }
+                                });
+                                $(this).dialog("close");
+                            }
+                        }
+                    ]
+                });
+            });
+        </script>
+
+        <style>
+            #gmapLatLngPicker {
+                width: 1024px;
+                height: 500px;
+            }
+        </style>
+    </head>
+    <body>
+        <!--        <div id="dialogLatlngPicker" >
+                    <div id="gmapLatLngPicker" class="gmap3"></div>
+                </div>-->
+    </body>
+</html>

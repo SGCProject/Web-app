@@ -6,31 +6,52 @@
         <link rel="import" type="text/html" href="../html/lib/include.html" />
         <script type="text/javascript">
             $(document).ready(function () {
-                $('#PeopleTableContainer').jtable({
-                    title: 'เขตพื้นที่',
-                    actions: {
-                        listAction: url + 'TitleName/query',
-                        createAction: url + 'TitleName/insert',
-                        updateAction: url + 'TitleName/update',
-                        deleteAction: url + 'TitleName/delete'
-                    },
-                    fields: {
-                        pk: {
-                            key: true,
-                            list: false
-                        },
-                        title_name: {
-                            title: 'ชื่อเขตพื้นที่',
-                            width: '40%'
-                        }
+                $.post(url + "UserService/checkLogin", function (data) {
+                    if (data.login == false || data.admin == false) {
+                        $('#dialogLogin').dialog("open");
+                    } else {
+                        $('#tableTitleName').jtable({
+                            title: 'คำนำหน้าชื่อ',
+                            actions: {
+                                listAction: url + 'TitleName/query',
+                                createAction: url + 'TitleName/insert',
+                                updateAction: url + 'TitleName/update',
+                                deleteAction: url + 'TitleName/delete'
+                            },
+                            fields: {
+                                pk: {
+                                    key: true,
+                                    list: false
+                                },
+                                title_name: {
+                                    title: '',
+                                    width: '40%'
+                                }
+                            }
+                        });
+                        //Load person list from server
+                        $('#tableTitleName').jtable('load');
                     }
                 });
-                //Load person list from server
-                $('#PeopleTableContainer').jtable('load');
             });
         </script>
     </head>
     <body>
-        <div id="PeopleTableContainer"></div>
+        <div id="tableTitleName"></div>
+        <div id="dialogLogin" title="เข้าสู่ระบบ">
+            <div>
+                <div>ชื่อยัญชี</div>
+                <div><input type="text" id="txtUserName" /></div>
+            </div>
+            <div>
+                <div>รหัสผ่าน</div>
+                <div><input type="password" id="txtPassword" /></div>
+            </div>
+            <div>
+                <div></div>
+                <div><a id="lnkForgetPassword" href="#" onclick="forgetPassword();">ลืมรหัสผ่าน</a></div>
+            </div>
+        </div>
+        <div id="dialogAlert"></div>
     </body>
 </html>

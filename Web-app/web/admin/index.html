@@ -1,20 +1,46 @@
 <!DOCTYPE html>
-<!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
--->
 <html>
     <head>
         <title>TODO supply a title</title>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="import" type="text/html" href="../html/lib/include.html" />
+        <script>
+            $(function () {
+                $('#lnkChangePassword').on("click", function () {
+                    $('#dialogChangePassword').dialog("open");
+                });
+                
+                $('#lnkLogout').on("click", function () {
+                    $.post(url + "UserService/logout", function(data) {
+                        alert(data.message);
+                    });
+                });
+            });
+        </script>
     </head>
     <body>
         <a href="type.html">ประเถทคดี</a>
         <a href="area.html">เขตพื้นที่</a>
         <a href="place.html">ประเถทสถานที่</a>
         <a href="title_name.html">คำนำหน้าชื่อ</a>
-        <a href="time.html">ช่วงเวลาเกิดเหตุ</a>
-    </body>
+        <a href="time.html">ช่วงเวลาเกิดเหตุ</a>        
+        <a id="lnkChangePassword" href="#">เปลี่ยนรหัสผ่าน</a>
+        <a id="lnkLogout" href="#">ออกจากระบบ</a>
+
+        <div id="dialogAlert"></div>
+        <div id="dialogChangePassword" >
+            <div>
+                <div>รหัสผ่านเดิม</div>
+                <div><input type="password" id="txtOldPassword" /></div>
+            </div>
+            <div>
+                <div>รหัสผ่านใหม่</div>
+                <div><input type="password" id="txtNewPassword" /></div>
+            </div>
+            <div>
+                <div>ยืนยันรหัสผ่าน</div>
+                <div><input type="password" id="txtConfirmNewPassword" /></div>
+            </div>
+        </div>
+    </body>    
 </html>

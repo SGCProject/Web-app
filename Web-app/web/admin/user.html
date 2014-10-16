@@ -13,100 +13,119 @@
                 });
             });
             $(document).ready(function () {
-                $('#tableUser').jtable({
-                    title: 'จัดการบัญชีผู้ใช้',
-                    actions: {
-                        listAction: url + 'User/query',
-                        createAction: url + 'User/insert',
-                        updateAction: url + 'User/update',
-                        deleteAction: url + 'User/delete'
-                    },
-                    fields: {
-                        pk: {
-                            key: true,
-                            list: false
+                if (data.login == false || data.admin == false) {
+                    $('#dialogLogin').dialog("open");
+                } else {
+                    $('#tableUser').jtable({
+                        title: 'จัดการบัญชีผู้ใช้',
+                        actions: {
+                            listAction: url + 'User/query',
+                            createAction: url + 'User/insert',
+                            updateAction: url + 'User/update',
+                            deleteAction: url + 'User/delete'
                         },
-                        title_name_pk: {
-                            list: false,
-                            input: function (data) {
-                                var text = $('<select name="title_name_pk" ></select>');
-                                text.append('<option value="">โปรดระบุคำนำหน้าชื่อ</option>');
-
-                                $.each(title_name, function (key, value) {
-                                    if (data.record.title_name_pk == key) {
-                                        text.append('<option value="' + key + '" selected="selected" >' + value + '</option>');
-                                    } else {
-                                        text.append('<option value="' + key + '" >' + value + '</option>');
-                                    }
-                                });
-                                return text;
-                            }
-                        },
-                        name: {
-                            title: 'ชื่อ นามสกุล',
-                            width: '20%',
-                            display: function (data) {
-                                return title_name[data.record.title_name_pk] + ' ' + data.record.name + ' ' + data.record.last_name;
-                            }
-                        },
-                        last_name: {
-                            list: false
-                        },
-                        user_name: {
-                            title: 'ชื่อบัญชีผู้ใช้',
-                            width: '20%'
-                        },
-                        e_mail: {
-                            title: 'อีเมลล์',
-                            width: '20%'
-                        },
-                        level: {
-                            title: 'สิทธิ์บัญชี',
-                            width: '20%',
-                            display: function (data) {
-                                return access[data.record.level];
+                        fields: {
+                            pk: {
+                                key: true,
+                                list: false
                             },
-                            input: function (data) {
-                                var text = $('<select name="level" ></select>');
-                                $.each(access, function (key, value) {
-                                    text.append('<option value="' + key + '">' + value + '</option>');
-                                });
-                                return text;
-                            }
-                        },
-                        status: {
-                            title: 'สถานะ',
-                            width: '20%',
-                            create: false,
-                            display: function (data) {
-                                if (data.record.status == "true") {
-                                    return "<div style='color: blue;'>เปิดใช้งาน</div>";
-                                } else {
-                                    return "<div style='color: red;'>ไม่เปิดใช้งาน</div>";
+                            title_name_pk: {
+                                list: false,
+                                input: function (data) {
+                                    var text = $('<select name="title_name_pk" ></select>');
+                                    text.append('<option value="">โปรดระบุคำนำหน้าชื่อ</option>');
+
+                                    $.each(title_name, function (key, value) {
+                                        if (data.record.title_name_pk == key) {
+                                            text.append('<option value="' + key + '" selected="selected" >' + value + '</option>');
+                                        } else {
+                                            text.append('<option value="' + key + '" >' + value + '</option>');
+                                        }
+                                    });
+                                    return text;
                                 }
                             },
-                            input: function (data) {
-                                if (data.record.status == "true") {
-                                    return '<select name="status" >' +
-                                            '<option value="true" selected="selected" >เปิดใช้งาน</option>' +
-                                            '<option value="false" >ไม่เปิดใช้งาน</option>' +
-                                            '</select>';
-                                } else {
-                                    return '<select name="status" >' +
-                                            '<option value="true" >เปิดใช้งาน</option>' +
-                                            '<option value="false" selected="selected" >ไม่เปิดใช้งาน</option>' +
-                                            '</select>';
+                            name: {
+                                title: 'ชื่อ นามสกุล',
+                                width: '20%',
+                                display: function (data) {
+                                    return title_name[data.record.title_name_pk] + ' ' + data.record.name + ' ' + data.record.last_name;
+                                }
+                            },
+                            last_name: {
+                                list: false
+                            },
+                            user_name: {
+                                title: 'ชื่อบัญชีผู้ใช้',
+                                width: '20%'
+                            },
+                            e_mail: {
+                                title: 'อีเมลล์',
+                                width: '20%'
+                            },
+                            level: {
+                                title: 'สิทธิ์บัญชี',
+                                width: '20%',
+                                display: function (data) {
+                                    return access[data.record.level];
+                                },
+                                input: function (data) {
+                                    var text = $('<select name="level" ></select>');
+                                    $.each(access, function (key, value) {
+                                        text.append('<option value="' + key + '">' + value + '</option>');
+                                    });
+                                    return text;
+                                }
+                            },
+                            status: {
+                                title: 'สถานะ',
+                                width: '20%',
+                                create: false,
+                                display: function (data) {
+                                    if (data.record.status == "true") {
+                                        return "<div style='color: blue;'>เปิดใช้งาน</div>";
+                                    } else {
+                                        return "<div style='color: red;'>ไม่เปิดใช้งาน</div>";
+                                    }
+                                },
+                                input: function (data) {
+                                    if (data.record.status == "true") {
+                                        return '<select name="status" >' +
+                                                '<option value="true" selected="selected" >เปิดใช้งาน</option>' +
+                                                '<option value="false" >ไม่เปิดใช้งาน</option>' +
+                                                '</select>';
+                                    } else {
+                                        return '<select name="status" >' +
+                                                '<option value="true" >เปิดใช้งาน</option>' +
+                                                '<option value="false" selected="selected" >ไม่เปิดใช้งาน</option>' +
+                                                '</select>';
+                                    }
                                 }
                             }
                         }
-                    }
-                });
-                //Load person list from server
-                $('#tableUser').jtable('load');
+                    });
+                    //Load person list from server
+                    $('#tableUser').jtable('load');
+                }
             });
         </script>
     </head>
     <body>
         <div id="tableUser"></div>
+        <div id="dialogLogin" title="เข้าสู่ระบบ">
+            <div>
+                <div>ชื่อยัญชี</div>
+                <div><input type="text" id="txtUserName" /></div>
+            </div>
+            <div>
+                <div>รหัสผ่าน</div>
+                <div><input type="password" id="txtPassword" /></div>
+            </div>
+            <div>
+                <div></div>
+                <div><a id="lnkForgetPassword" href="#" onclick="forgetPassword();">ลืมรหัสผ่าน</a></div>
+            </div>
+        </div>
+        <div id="dialogAlert"></div>
     </body>
 </html>

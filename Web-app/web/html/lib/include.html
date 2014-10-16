@@ -11,53 +11,174 @@
 <script type="text/javascript" src="../../js/libs/jTable/localization/jquery.jtable.th.js"></script>
 
 <style>
-    /*    .dialog-alert {
-            display: none;
-        }*/
+    #feedback { font-size: 1.4em; }
+    #selectable .ui-selecting { background: #FECA40; }
+    #selectable .ui-selected { background: #F39814; color: white; }
+    #selectable { list-style-type: none; margin: 0; padding: 0; width: 60%; }
+    #selectable li { margin: 3px; padding: 0.4em; font-size: 1.4em; height: 18px; }        
 </style>
 
 <script>
     var url = "/Web-ser/rest/";
-
-    $("#dialogAlert").dialog({
-        buttons: [
-            {
-                text: "ตกลง",
-                click: function () {
-                    $(this).dialog("close");
-                }
-            }
-        ]
-    });
-
-    $("#dialogLogin").dialog({
-        buttons: [
-            {
-                text: "เข้าสู่ระบบ",
-                click: function () {
-                    // call service login
-                }
-            },
-            {
-                text: "ยกเลิก",
-                click: function () {
-                    $(this).dialog("close");
-                }
-            }
-        ]
-    });
-
-    console.log("Include HTML Header");
+    var latLng;
 
     $(function () {
-//        window.alert = function (text) {
-//            console.log("alert");
-//            $("#dialogAlert").html(text);
-//            $("#dialogAlert").dialog( "open" );
-//            return false;
-//        };
+        function forgetPassword() {
+            var eMail = prompt("ตั่งรหัสผ่านใหม่", "กรอกที่อยู่อีเมลล์");
+
+            if (eMail != null) {
+                $.post(url + "UserService/forgetPassword", {"e_mail": eMail}, function (data) {
+                    if (data.Result == "OK") {
+                        alert("ระบบได้ทำการตั่งรหัสผ่านใหม่และส่งรหัสผ่านไปทางอีเมลล์เรียบร้อยแล้ว...");
+                        return true;
+                    } else {
+                        alert(data.Message);
+                        return false;
+                    }
+                });
+            }
+        }
+/////////////////////////////////////////////////////////////////////////////////
+        $("#dialogAlert").dialog({
+            autoOpen: false,
+            resizable: false,
+            draggable: false,
+            buttons: [
+                {
+                    text: "ตกลง",
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            ]
+        });
+
+        $("#dialogLogin").dialog({
+            autoOpen: false,
+            resizable: false,
+            draggable: false,
+            buttons: [
+                {
+                    text: "เข้าสู่ระบบ",
+                    click: function () {
+                        $.post(url + "UserService/login",
+                                {
+                                    "user_name": $('#txtUserName').val(),
+                                    "password": $('#txtPassword').val()
+                                },
+                        function (data) {
+                            if (data.Result == "OK") {
+                                location.reload();
+                            } else {
+                                alert(data.Message);
+                            }
+                        });
+                    }
+                },
+                {
+                    text: "ยกเลิก",
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            ]
+        });
+
+        $("#dialogChangePassword").dialog({
+            autoOpen: false,
+            resizable: false,
+            draggable: false,
+            buttons: [
+                {
+                    text: "เปลี่ยนรหัสผ่าน",
+                    click: function () {
+                        if ($('#txtNewPassword').val() == $('#txtConfirmNewPassword').val()) {
+                            $.post(url + "UserService/changePassword",
+                                    {
+                                        "old": $('#txtOldPassword').val(),
+                                        "new": $('#txtNewPassword').val()
+                                    },
+                            function (data) {
+                                if (data.Result == "OK") {
+                                    alert("ระบบทำการตั่งรหัสผ่านใหม่เรียบร้อยแล้ว");
+                                    $("#dialogChangePassword").dialog("close");
+                                    $('#txtOldPassword').val("");
+                                    $('#txtNewPassword').val("");
+                                    $('#txtConfirmPassword').val("");
+                                } else {
+                                    alert(data.Message);
+                                }
+                            });
+                        } else {
+                            alert("รหัสผ่านใหม่ไม่ตรงกัน");
+                        }
+                    }
+                },
+                {
+                    text: "ยกเลิก",
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            ]
+        });
+
+        console.log("Include HTML Header");
+
+        window.alert = function (text) {
+            console.log("alert");
+            $("#dialogAlert").html(text);
+            $("#dialogAlert").dialog("open");
+            return false;
+        };
+
+        ////////////////////////////////////////////////////////////////////////
+
+        $("#selectArea").selectable();
     });
 
 </script>
 <div id="dialogAlert"></div>
-<div id="dialogLogin" title="เข้าสู่ระบบ"></div>
+<!--
+<div id="dialogChangePassword" >
+    <div>
+        <div>รหัสผ่านเดิม</div>
+        <div><input type="password" id="txtOldPassword" /></div>
+    </div>
+    <div>
+        <div>รหัสผ่านใหม่</div>
+        <div><input type="password" id="txtNewPassword" /></div>
+    </div>
+    <div>
+        <div>ยืนยันรหัสผ่าน</div>
+        <div><input type="password" id="txtConfirmNewPassword" /></div>
+    </div>
+</div>
+-->
+
+
+
+
+
+
+
+
+
+
+
+<!--
+<div id="dialogLogin" title="เข้าสู่ระบบ">
+    <div>
+        <div>ชื่อยัญชี</div>
+        <div><input type="text" id="txtUserName" /></div>
+    </div>
+    <div>
+        <div>รหัสผ่าน</div>
+        <div><input type="text" id="txtPassword" /></div>
+    </div>
+    <div>
+        <div></div>
+        <div><a id="lnkForgetPassword" href="#" onclick="forgetPassword();">ลืมรหัสผ่าน</div>
+    </div>
+</div>
+-->
