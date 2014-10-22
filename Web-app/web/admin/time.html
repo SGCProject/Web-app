@@ -6,31 +6,53 @@
         <link rel="import" type="text/html" href="../html/lib/include.html" />
         <script type="text/javascript">
             $(document).ready(function () {
-                $('#PeopleTableContainer').jtable({
-                    title: 'ช่วงเวลา',
-                    actions: {
-                        listAction: url + 'Time/query',
-                        createAction: url + 'Time/insert',
-                        updateAction: url + 'Time/update',
-                        deleteAction: url + 'Time/delete'
-                    },
-                    fields: {
-                        pk: {
-                            key: true,
-                            list: false
-                        },
-                        time_lange: {
+                $.post(url + "UserService/checkLogin", function (data) {
+                    if (data.login == false || data.admin == false) {
+                        $('#dialogLogin').dialog("open");
+                    } else {
+                        $('#PeopleTableContainer').jtable({
                             title: 'ช่วงเวลา',
-                            width: '40%'
-                        }
+                            actions: {
+                                listAction: url + 'Time/query',
+                                createAction: url + 'Time/insert',
+                                updateAction: url + 'Time/update',
+                                deleteAction: url + 'Time/delete'
+                            },
+                            fields: {
+                                pk: {
+                                    key: true,
+                                    list: false
+                                },
+                                time_lange: {
+                                    title: 'ช่วงเวลา',
+                                    width: '40%'
+                                }
+                            }
+                        });
+                        //Load person list from server
+                        $('#PeopleTableContainer').jtable('load');
                     }
                 });
-                //Load person list from server
-                $('#PeopleTableContainer').jtable('load');
             });
         </script>
     </head>
     <body>
         <div id="PeopleTableContainer"></div>
+        <div id="dialogLogin" title="เข้าสู่ระบบ">
+            <div>
+                <div>ชื่อยัญชี</div>
+                <div><input type="text" id="txtUserName" /></div>
+            </div>
+            <div>
+                <div>รหัสผ่าน</div>
+                <div><input type="password" id="txtPassword" /></div>
+            </div>
+            <div>
+                <div></div>
+                <div><a id="lnkForgetPassword" href="#" onclick="forgetPassword()
+                                ;">ลืมรหัสผ่าน</a></div>
+            </div>
+        </div>
+        <div id="dialogAlert"></div>
     </body>
 </html>

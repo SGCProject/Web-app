@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>TODO supply a title</title>
         <meta charset="UTF-8">
         <link rel="import" type="text/html" href="../html/lib/include.html" />
         <script>
@@ -12,7 +11,11 @@
                 
                 $('#lnkLogout').on("click", function () {
                     $.post(url + "UserService/logout", function(data) {
-                        alert(data.message);
+                        if (data.Result == "OK") {
+                            window.location.href = "../";
+                        } else {
+                            alert(data.Message);
+                        }
                     });
                 });
             });
@@ -23,7 +26,8 @@
         <a href="area.html">เขตพื้นที่</a>
         <a href="place.html">ประเถทสถานที่</a>
         <a href="title_name.html">คำนำหน้าชื่อ</a>
-        <a href="time.html">ช่วงเวลาเกิดเหตุ</a>        
+        <a href="time.html">ช่วงเวลาเกิดเหตุ</a>
+        <a href="user.html">จัดการบัญชีผู้ใช้</a>
         <a id="lnkChangePassword" href="#">เปลี่ยนรหัสผ่าน</a>
         <a id="lnkLogout" href="#">ออกจากระบบ</a>
 
@@ -42,5 +46,5 @@
                 <div><input type="password" id="txtConfirmNewPassword" /></div>
             </div>
         </div>
-    </body>    
+    </body>
 </html>

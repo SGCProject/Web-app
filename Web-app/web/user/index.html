@@ -1,14 +1,41 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>TODO supply a title</title>
         <meta charset="UTF-8">
+        <link rel="import" type="text/html" href="../html/lib/include.html" />
+        <script>
+            $(function () {
+                $.post(url + "UserService/checkLogin", function (data) {
+                    if (data.login == false) {
+                        $('#dialogLogin').dialog("open");
+                    }
+                    if (data.admin == true) {
+                        $('#lnkAdmin').css("display", "inline");
+                    }
+                });
+
+                $('#lnkLogout').on("click", function () {
+                    $.post(url + "UserService/logout", function (data) {
+                        if (data.Result == "OK") {
+                            window.location.href = "../";
+                        } else {
+                            alert(data.Message);
+                        }
+                    });
+                });
+
+                $('#lnkChangePassword').on("click", function () {
+                    $('#dialogChangePassword').dialog("open");
+                });
+            });
+        </script>
     </head>
     <body>
         <a href="type.html">เพิ่มคดี</a>
         <a href="area.html">แผนที่</a>
         <a href="place.html">กราฟ</a>
-        <!--<a href="title_name.html">จัดการคดี</a>-->
-        <a href="time.html">ออกจากระบบ</a>
+        <a id="lnkAdmin" href="../admin" style="display: none;">จัดการระบบ</a>
+        <a id="lnkChangePassword" href="#">เปลี่ยนรหัสผ่าน</a>
+        <a id="lnkLogout" href="#">ออกจากระบบ</a>
     </body>
 </html>

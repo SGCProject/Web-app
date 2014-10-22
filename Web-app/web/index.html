@@ -1,21 +1,44 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>TODO supply a title</title>
         <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <script src="js/libs/jquery/jquery.js" type="text/javascript"></script>    
+        <link rel="import" type="text/html" href="html/lib/include.html" />
         <script>
-                $.post(url + 'Type/test', function(d) {
-                   console.log(d);
+            $(function() {
+                $.post(url + "UserService/checkLogin", function (data) {
+                    if (data.login == true) {                        
+                        if (data.user == false) {
+                            window.location.href = 'admin';
+                        } else {
+                            window.location.href = 'user';
+                        }
+                    }
                 });
+                
+                $('#lnkLogin').on("click", function() {
+                    $('#dialogLogin').dialog("open");
+                });
+            });
         </script>
     </head>
     <body>
-        <form action="http://localhost:8080/Web-ser/UploadFile" method="post" >
-            <input type="file" name="file" />
-            <input type="submit" />
-        </form>
+        <a href="map/index.html">แผนที่</a>
+        <a href="crime/index.html">สถิติ</a>
+        <a href="#" id="lnkLogin">สำหรับเจ้าหน้าที่</a>
+        <div id="dialogLogin" title="เข้าสู่ระบบ">
+            <div>
+                <div>ชื่อยัญชี</div>
+                <div><input type="text" id="txtUserName" /></div>
+            </div>
+            <div>
+                <div>รหัสผ่าน</div>
+                <div><input type="password" id="txtPassword" /></div>
+            </div>
+            <div>
+                <div></div>
+                <div><a id="lnkForgetPassword" href="#" onclick="forgetPassword();">ลืมรหัสผ่าน</a></div>
+            </div>
+        </div>
+        <div id="dialogAlert"></div>
     </body>
 </html>
