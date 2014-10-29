@@ -23,7 +23,41 @@
     var latLng;
 
     $(function () {
-        function forgetPassword() {
+
+        $('body').append('<div id="append"></div>');
+        $('#append').html(
+                '<div id="dialogAlert"></div>' +
+                '<div id="dialogLogin" title="เข้าสู่ระบบ">' +
+                '<div>' +
+                '<div>ชื่อยัญชี</div>' +
+                '<div><input type="text" id="txtUserName" /></div>' +
+                '</div>' +
+                '<div>' +
+                '<div>รหัสผ่าน</div>' +
+                '<div><input type="text" id="txtPassword" /></div>' +
+                '</div>' +
+                '<div>' +
+                '<div></div>' +
+                '<div><a id="lnkForgetPassword" href="#" >ลืมรหัสผ่าน</a></div>' +
+                '</div>' +
+                '</div>' +
+                '<div id="dialogChangePassword" >' +
+                '<div>' +
+                '<div>รหัสผ่านเดิม</div>' +
+                '<div><input type="password" id="txtOldPassword" /></div>' +
+                '</div>' +
+                '<div>' +
+                '<div>รหัสผ่านใหม่</div>' +
+                '<div><input type="password" id="txtNewPassword" /></div>' +
+                '</div>' +
+                '<div>' +
+                '<div>ยืนยันรหัสผ่าน</div>' +
+                '<div><input type="password" id="txtConfirmNewPassword" /></div>' +
+                '</div>' +
+                '</div>'
+                );
+
+        $('#lnkForgetPassword').on('click', function () {
             var eMail = prompt("ตั่งรหัสผ่านใหม่", "กรอกที่อยู่อีเมลล์");
 
             if (eMail != null) {
@@ -37,12 +71,17 @@
                     }
                 });
             }
-        }
+        });
+
 /////////////////////////////////////////////////////////////////////////////////
-        $("#dialogAlert").dialog({
+        //  Override jQueryUI dialog default options
+        $.extend($.ui.dialog.prototype.options, {
             autoOpen: false,
             resizable: false,
-            draggable: false,
+            draggable: false
+        });        
+
+        $("#dialogAlert").dialog({
             buttons: [
                 {
                     text: "ตกลง",
@@ -54,9 +93,6 @@
         });
 
         $("#dialogLogin").dialog({
-            autoOpen: false,
-            resizable: false,
-            draggable: false,
             buttons: [
                 {
                     text: "เข้าสู่ระบบ",
@@ -85,9 +121,6 @@
         });
 
         $("#dialogChangePassword").dialog({
-            autoOpen: false,
-            resizable: false,
-            draggable: false,
             buttons: [
                 {
                     text: "เปลี่ยนรหัสผ่าน",
@@ -131,54 +164,5 @@
             $("#dialogAlert").dialog("open");
             return false;
         };
-
-        ////////////////////////////////////////////////////////////////////////
-
-        $("#selectArea").selectable();
     });
-
 </script>
-<div id="dialogAlert"></div>
-<!--
-<div id="dialogChangePassword" >
-    <div>
-        <div>รหัสผ่านเดิม</div>
-        <div><input type="password" id="txtOldPassword" /></div>
-    </div>
-    <div>
-        <div>รหัสผ่านใหม่</div>
-        <div><input type="password" id="txtNewPassword" /></div>
-    </div>
-    <div>
-        <div>ยืนยันรหัสผ่าน</div>
-        <div><input type="password" id="txtConfirmNewPassword" /></div>
-    </div>
-</div>
--->
-
-
-
-
-
-
-
-
-
-
-
-<!--
-<div id="dialogLogin" title="เข้าสู่ระบบ">
-    <div>
-        <div>ชื่อยัญชี</div>
-        <div><input type="text" id="txtUserName" /></div>
-    </div>
-    <div>
-        <div>รหัสผ่าน</div>
-        <div><input type="text" id="txtPassword" /></div>
-    </div>
-    <div>
-        <div></div>
-        <div><a id="lnkForgetPassword" href="#" onclick="forgetPassword();">ลืมรหัสผ่าน</div>
-    </div>
-</div>
--->

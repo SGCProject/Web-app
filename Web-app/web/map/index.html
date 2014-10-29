@@ -20,7 +20,7 @@
             $(document).ready(function () {
                 var map = $("#gmap");
 
-                $(".showLookup").selectable();
+                $("#menuType").selectable();
 
                 map.gmap3({
                     map: {
@@ -112,7 +112,7 @@
     <body>
         <div id="menu">
             <div>Menu</div>
-            <ol class="showLookup" size="5" itemid="Type">
+            <ol id="menuType" class="showLookup" itemid="Type">
                 <li class="ui-widget-content ui-selected" pk="[pk]" >[name]</li>
             </ol>
         </div>

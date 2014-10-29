@@ -40,11 +40,7 @@
                                             text.append('<option value="">โปรดระบุคำนำหน้าชื่อ</option>');
 
                                             $.each(title_name, function (key, value) {
-                                                if (data.record.title_name_pk == key) {
-                                                    text.append('<option value="' + key + '" selected="selected" >' + value + '</option>');
-                                                } else {
-                                                    text.append('<option value="' + key + '" >' + value + '</option>');
-                                                }
+                                                text.append('<option value="' + key + '" >' + value + '</option>');
                                             });
                                             return text;
                                         }
@@ -118,20 +114,5 @@
     </head>
     <body>
         <div id="tableUser"></div>
-        <div id="dialogLogin" title="เข้าสู่ระบบ">
-            <div>
-                <div>ชื่อยัญชี</div>
-                <div><input type="text" id="txtUserName" /></div>
-            </div>
-            <div>
-                <div>รหัสผ่าน</div>
-                <div><input type="password" id="txtPassword" /></div>
-            </div>
-            <div>
-                <div></div>
-                <div><a id="lnkForgetPassword" href="#" onclick="forgetPassword();">ลืมรหัสผ่าน</a></div>
-            </div>
-        </div>
-        <div id="dialogAlert"></div>
     </body>
 </html>

@@ -4,9 +4,9 @@
         <meta charset="UTF-8">
         <link rel="import" type="text/html" href="html/lib/include.html" />
         <script>
-            $(function() {
+            $(function () {
                 $.post(url + "UserService/checkLogin", function (data) {
-                    if (data.login == true) {                        
+                    if (data.login == true) {
                         if (data.user == false) {
                             window.location.href = 'admin';
                         } else {
@@ -14,8 +14,8 @@
                         }
                     }
                 });
-                
-                $('#lnkLogin').on("click", function() {
+
+                $('#lnkLogin').on("click", function () {
                     $('#dialogLogin').dialog("open");
                 });
             });
@@ -23,22 +23,7 @@
     </head>
     <body>
         <a href="map/index.html">แผนที่</a>
-        <a href="crime/index.html">สถิติ</a>
+        <a href="chart/type.html">สถิติ</a>
         <a href="#" id="lnkLogin">สำหรับเจ้าหน้าที่</a>
-        <div id="dialogLogin" title="เข้าสู่ระบบ">
-            <div>
-                <div>ชื่อยัญชี</div>
-                <div><input type="text" id="txtUserName" /></div>
-            </div>
-            <div>
-                <div>รหัสผ่าน</div>
-                <div><input type="password" id="txtPassword" /></div>
-            </div>
-            <div>
-                <div></div>
-                <div><a id="lnkForgetPassword" href="#" onclick="forgetPassword();">ลืมรหัสผ่าน</a></div>
-            </div>
-        </div>
-        <div id="dialogAlert"></div>
     </body>
 </html>
