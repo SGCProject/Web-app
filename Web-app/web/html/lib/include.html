@@ -34,7 +34,7 @@
                 '</div>' +
                 '<div>' +
                 '<div>รหัสผ่าน</div>' +
-                '<div><input type="text" id="txtPassword" /></div>' +
+                '<div><input type="password" id="txtPassword" /></div>' +
                 '</div>' +
                 '<div>' +
                 '<div></div>' +
@@ -56,6 +56,23 @@
                 '</div>' +
                 '</div>'
                 );
+
+        $('#txtPassword').on('keypress', function (e) {
+            if (e.which == 13) {
+                $.post(url + "UserService/login",
+                        {
+                            "user_name": $('#txtUserName').val(),
+                            "password": $('#txtPassword').val()
+                        },
+                function (data) {
+                    if (data.Result == "OK") {
+                        location.reload();
+                    } else {
+                        alert(data.Message);
+                    }
+                });
+            }
+        });
 
         $('#lnkForgetPassword').on('click', function () {
             var eMail = prompt("ตั่งรหัสผ่านใหม่", "กรอกที่อยู่อีเมลล์");
@@ -79,7 +96,7 @@
             autoOpen: false,
             resizable: false,
             draggable: false
-        });        
+        });
 
         $("#dialogAlert").dialog({
             buttons: [

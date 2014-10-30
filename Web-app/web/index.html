@@ -18,6 +18,10 @@
                 $('#lnkLogin').on("click", function () {
                     $('#dialogLogin').dialog("open");
                 });
+                
+                $.post(url + "Area/query", function(data) {
+                    console.log(data);
+                });
             });
         </script>
     </head>

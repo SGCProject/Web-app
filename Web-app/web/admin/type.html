@@ -11,7 +11,7 @@
                         $('#dialogLogin').dialog("open");
                     } else {
                         $('#tableType').jtable({
-                            title: 'Table of people',
+                            title: 'ประเภทคดี',
                             actions: {
                                 listAction: url + 'Type/query',
                                 createAction: url + 'Type/insert',
@@ -24,11 +24,11 @@
                                     list: false
                                 },
                                 name: {
-                                    title: 'Author Name',
+                                    title: งชื่อประเภทคดี',
                                     width: '40%'
                                 },
                                 image: {
-                                    title: 'Photo',
+                                    title: 'รูปสัญลักษณ์',
                                     width: '40%',
                                     display: function (data) {
                                         return '<img src="' + "/Web-ser/image/marker/" + data.record.pk + '.png" />';

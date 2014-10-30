@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="import" type="text/html" href="../html/lib/include.html" />
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $.post(url + "UserService/checkLogin", function (data) {
+                    if (data.login == false || data.admin == false) {
+                        $('#dialogLogin').dialog("open");
+                    } else {
+                        $('#tableCheckPoint').jtable({
+                            title: 'จุดตรวจ',
+                            actions: {
+                                listAction: url + 'CheckPoint/query',
+                                createAction: url + 'CheckPoint/insert',
+                                updateAction: url + 'CheckPoint/update',
+                                deleteAction: url + 'CheckPoint/delete'
+                            },
+                            fields: {
+                                pk: {
+                                    key: true,
+                                    list: false
+                                },
+                                name: {
+                                    title: 'ชื่อจุดตรวจ',
+                                    width: '40%'
+                                }
+                            }
+                        });
+                        //Load person list from server
+                        $('#tableCheckPoint').jtable('load');
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div id="tableCheckPoint"></div>
+    </body>
+</html>
