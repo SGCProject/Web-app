@@ -5,18 +5,24 @@
         <link rel="import" type="text/html" href="../html/lib/include.html" />
         <script>
             $(function () {
-                $('#lnkChangePassword').on("click", function () {
-                    $('#dialogChangePassword').dialog("open");
-                });
-                
-                $('#lnkLogout').on("click", function () {
-                    $.post(url + "UserService/logout", function(data) {
-                        if (data.Result == "OK") {
-                            window.location.href = "../";
-                        } else {
-                            alert(data.Message);
-                        }
-                    });
+                $.post(url + "UserService/checkLogin", function (data) {
+                    if (data.login == false || data.admin == false) {
+                        $('#dialogLogin').dialog("open");
+                    } else {
+                        $('#lnkChangePassword').on("click", function () {
+                            $('#dialogChangePassword').dialog("open");
+                        });
+
+                        $('#lnkLogout').on("click", function () {
+                            $.post(url + "UserService/logout", function (data) {
+                                if (data.Result == "OK") {
+                                    window.location.href = "../";
+                                } else {
+                                    alert(data.Message);
+                                }
+                            });
+                        });
+                    }
                 });
             });
         </script>

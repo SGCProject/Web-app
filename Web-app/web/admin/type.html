@@ -6,6 +6,8 @@
         <link rel="import" type="text/html" href="../html/lib/include.html" />
         <script type="text/javascript">
             $(document).ready(function () {
+                var isSetMarkerImage = false;
+
                 $.post(url + "UserService/checkLogin", function (data) {
                     if (data.login == false || data.admin == false) {
                         $('#dialogLogin').dialog("open");
@@ -24,24 +26,68 @@
                                     list: false
                                 },
                                 name: {
-                                    title: งชื่อประเภทคดี',
+                                    title: 'ชื่อประเภทคดี',
                                     width: '40%'
                                 },
                                 image: {
                                     title: 'รูปสัญลักษณ์',
-                                    width: '40%',
+                                    width: '20%',
                                     display: function (data) {
-                                        return '<img src="' + "/Web-ser/image/marker/" + data.record.pk + '.png" />';
+                                        return '<img src="' + "/marker/" + data.record.pk + '.png" width="50px" height="50px" />';
                                     },
                                     input: function (data) {
-                                        return '<input type="file" name="image"/>';
+                                        return '<form id="upload" enctype="multipart/form-data"><input type="file" id="file" name="file"/></form><div id="img" ></div>' +
+                                                '\x3Cscript type="text/javascript"">' +
+                                                '   $("#file").on("change", function () {' +
+                                                '       var data = new FormData();' +
+                                                '       jQuery.each($("#file")[0].files, function (i, file) {' +
+                                                '           data.append("file", file);' +
+                                                '       });' +
+                                                '       $.ajax({' +
+                                                '           url: url + "Upload/marker",' +
+                                                '           data: data,' +
+                                                '           cache: false,' +
+                                                '           contentType: false,' +
+                                                '           processData: false,' +
+                                                '           type: "POST",' +
+                                                '           success: function (data) {' +
+                                                '               isSetMarkerImage = true;' +
+                                                '               $("#img").html(\'<img src="http://\' + data + \'" width="100px" height="100px" />\');' +
+                                                '           }' +
+                                                '       });' +
+                                                '   }); ' +
+                                                '\x3C/script>';
                                     }
                                 },
                                 level: {
-                                    title: "Level"
+                                    title: "ระดับการเข้าถึงข้อมูล",
+                                    input: function (data) {
+                                        if (typeof data.value !== "undefined" && data.value === "0") {
+                                            return '<input type="checkbox" name="level" value="1" /><span>ประชาชนทั่วไปไม่สามารถเข้าถึงได้</span>';
+                                        } else {
+                                            return '<input type="checkbox" name="level" value="1" checked/><span>ประชาชนทั่วไปไม่สามารถเข้าถึงได้</span>';
+                                        }
+                                    },
+                                    display: function (data) {
+                                        if (data.record.level == 1) {
+                                            return "ประชาชนไม่สามารถเข้าถึงได้";
+                                        } else {
+                                            return "ประชาชนสามารถเข้าถึงได้";
+                                        }
+                                    }
+                                }
+                            },
+                            formSubmitting: function (event, data) {
+                                if ($('#file')[0].files.length === 0) {
+                                    alert('กรุณาเลือกไฟล์');
+                                    return false;
+                                } else {
+                                    return data;
                                 }
                             }
                         });
+
+
                         //Load person list from server
                         $('#tableType').jtable('load');
                     }

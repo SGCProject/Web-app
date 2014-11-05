@@ -2,15 +2,80 @@
 <html>
     <head>
         <link rel="import" type="text/html" href="../html/lib/include.html" />
+        <script src="../js/libs/bxslider/jquery.bxslider.min.js" type="text/javascript"></script>
+        <link href="../js/libs/bxslider/jquery.bxslider.css" rel="stylesheet" type="text/css"/>
         <script>
-            $(function() {
-                $.post(url + "Crime/query", {"pk":"2"}, function(data) {
-                    console.log(data);
-                });
+            $(function () {
+                var sPageURL = window.location.search.substring(1);
+                var sURLVariables = sPageURL.split('&');
+                for (var i = 0; i < sURLVariables.length; i++) {
+                    var sParameterName = sURLVariables[i].split('=');
+                    if (sParameterName[0] === "pk") {
+                        // View Mode
+                        console.log("View Mode");
+                        var pk = sParameterName[1];
+                        $.post(url + "Crime/query", {"pk": pk}, function (data) {
+                            console.log(data);
+                            if (data.Result === "OK") {
+                                //////
+                                $('#imgMap').html(
+                                        '<img src="https://maps.googleapis.com/maps/api/staticmap?' +
+                                        'center=' + data.Record.crime_lat + ',' + data.Record.crime_lng +
+                                        '&markers=' + data.Record.crime_lat + ',' + data.Record.crime_lng +
+                                        '&maptype=hybrid' +
+                                        '&feature:road' +
+                                        '&language=th-TH' +
+                                        '&zoom=16' +
+                                        '&size=500x500" />');
+
+                                $('#area').text(data.Record.area);
+                                $('#crime_date').text(data.Record.crime_date);
+                                $('#place').text(data.Record.place);
+                                $('#time').text(data.Record.time);
+                                $('#type').text(data.Record.type);
+                                $('#check_point').text(data.Record.check_point);
+                                $('#person').text(data.Record.person);
+                                $('#crime_detail').text(data.Record.crime_detail);
+                                $('#update_by_user').text(data.Record.update_by_user);
+                                $('#update_date').text(data.Record.update_date);
+                                $('#create_by_user').text(data.Record.create_by_user);
+                                $('#create_date').text(data.Record.create_date);
+
+                                $.each(data.Record.image, function () {
+                                    $('#image').append('<li><center><img src="/image/' + this + '.jpg" /></center></li>');
+                                });
+                                if (data.Record.image.length !== 0)
+                                    $('.bxslider').bxSlider();
+                            } else if (data.Result === "NoAccess") {
+                                $('#dialogLogin').dialog("open");
+                            } else {
+                                alert(data.Message);
+                            }
+                        });
+                    } else {
+                        // Add mode
+                        console.log("Add Mode");
+                    }
+                }
+
             });
         </script>
     </head>
     <body>
-        <div></div>
+        <div id="imgMap" ></div>
+        <div id="area"></div>
+        <div id="crime_date"></div>
+        <div id="place"></div>
+        <div id="time"></div>
+        <div id="type"></div>
+        <div id="check_point"></div>
+        <div id="person"></div>
+        <div id="crime_detail"></div>        
+        <div id="crime_level"></div>        
+        <div id="update_by_user"></div>
+        <div id="update_date"></div>
+        <div id="create_by_user"></div>
+        <div id="create_date"></div>
+        <ul id="image" class="bxslider"></ul>
     </body>
 </html>
