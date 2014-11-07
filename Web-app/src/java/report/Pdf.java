@@ -1,21 +1,44 @@
+package report;
+
+import com.gargoylesoftware.htmlunit.WebClient;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.lowagie.text.DocumentException;
+import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.PrintWriter;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
-@WebServlet(urlPatterns = {"/test"})
-public class test extends HttpServlet {
+@WebServlet(name = "Pdf", urlPatterns = {"/pdf"})
+public class Pdf extends HttpServlet {
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.setContentType("text/html;charset=UTF-8");                        
-        try (PrintWriter out = response.getWriter()) {
-            out.println(ServletFileUpload.isMultipartContent(request));
+        try {
+            response.setContentType("application/pdf;charset=UTF-8");
+
+            URL url = new URL("http://www.facebook.com");
+            WebClient webClient = new WebClient();
+            HtmlPage page = webClient.getPage(url);
+
+            ITextRenderer renderer = new ITextRenderer();
+            renderer.setDocument(page,url.toString());
+            renderer.layout();
+            OutputStream os = response.getOutputStream();
+            renderer.createPDF(os);
+            os.close();
+        } catch (DocumentException ex) {
+            Logger.getLogger(Pdf.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
