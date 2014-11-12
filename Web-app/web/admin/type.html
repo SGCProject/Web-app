@@ -36,7 +36,7 @@
                                         return '<img src="' + "/marker/" + data.record.pk + '.png" width="50px" height="50px" />';
                                     },
                                     input: function (data) {
-                                        return '<form id="upload" enctype="multipart/form-data"><input type="file" id="file" name="file"/></form><div id="img" ></div>' +
+                                        return '<form id="upload" enctype="multipart/form-data"><input type="file" accept="image/*" id="file" name="file"/></form><div id="img" ></div>' +
                                                 '\x3Cscript type="text/javascript"">' +
                                                 '   $("#file").on("change", function () {' +
                                                 '       var data = new FormData();' +

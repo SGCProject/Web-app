@@ -74,13 +74,19 @@
                                 marker: {
                                     values: [
                                         {
+                                            id: this.pk,
                                             latLng: [this.crime_lat, this.crime_lng],
                                             options: {
                                                 icon: new google.maps.MarkerImage("/marker/" + this.type_pk + ".png",
                                                         new google.maps.Size(32, 37, "px", "px"))
                                             }
                                         }
-                                    ]
+                                    ],
+                                    events: {
+                                        click: function(marker, event, context) {
+                                            window.location.replace("../crime/index.html?pk=" + context.id);
+                                        }
+                                    }
                                 }
                             });
                         });
@@ -116,7 +122,7 @@
         </div>
         <div id="dialogTime" title="ช่วงเวลาเกิดเหตุ<">
             <ol id="selectable" class="showLookup" itemid="Time">
-                <li class="ui-widget-content ui-selected" pk="[pk]" >[time_lange]</li>
+                <li class="ui-widget-content ui-selected" pk="[pk]" >[time_length]</li>
             </ol>
         </div>
         <div id="dialogType" title="ประเภทคดี">

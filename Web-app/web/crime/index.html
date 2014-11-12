@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
     <head>
+        <meta charset="UTF-8">
         <link rel="import" type="text/html" href="../html/lib/include.html" />
         <script src="../js/libs/bxslider/jquery.bxslider.min.js" type="text/javascript"></script>
         <link href="../js/libs/bxslider/jquery.bxslider.css" rel="stylesheet" type="text/css"/>
-        <script src="../js/libs/jsPDF/jspdf.js" type="text/javascript"></script>
+        <script src="../js/libs/jsPDF/jspdf.debug.js" type="text/javascript"></script>
         <script src="../js/libs/jsPDF/basic.js" type="text/javascript"></script>
         <script>
             $(function () {
@@ -16,7 +17,7 @@
                         // View Mode
                         console.log("View Mode");
                         var pk = sParameterName[1];
-                        $.post(url + "Crime/query", {"pk": pk}, function (data) {
+                        $.get(url + "Crime/query", {"pk": pk}, function (data) {
                             console.log(data);
                             if (data.Result === "OK") {
                                 //////
@@ -46,21 +47,39 @@
                                 $.each(data.Record.image, function () {
                                     $('#image').append('<li><center><img src="/image/' + this + '.jpg" /></center></li>');
                                 });
-                                if (data.Record.image.length !== 0)
+                                if (data.Record.image.length !== 0) {
                                     $('.bxslider').bxSlider();
+                                } 
                             } else if (data.Result === "NoAccess") {
                                 $('#dialogLogin').dialog("open");
                             } else {
                                 alert(data.Message);
                             }
+
+                            $('#butDel').on('click', function () {
+                                if (confirm("ยืนยันการลบคดี")) {
+                                    $.post(url + 'Crime/delete', {'pk':data.Record.pk}, function (data) {
+                                        console.log(data);
+                                    });
+                                }
+                            });
+                            $('#butEdit').on('click', function () {
+                                location.replace("update.html?pk=" + data.Record.pk);
+                            });
                         });
                     } else {
                         // Add mode
                         console.log("Add Mode");
                     }
                 }
-
             });
+
+            function report() {
+                var doc = new jsPDF();
+                doc.fromHTML($('#screen').get(0), 15, 15, {
+                });
+                doc.save('report.pdf');
+            }
         </script>
     </head>
     <body>
@@ -79,5 +98,7 @@
         <div id="create_by_user"></div>
         <div id="create_date"></div>
         <ul id="image" class="bxslider"></ul>
+        <input type="button" id="butEdit" value="แก้ไข" />
+        <input type="button" id="butDel" value="ลบ" />
     </body>
 </html>
