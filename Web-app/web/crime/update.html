@@ -18,21 +18,22 @@
                         var query = window.location.search.substring(1);
                         var pair = query.split("=");
                         var pk = pair[1];
-//                        if (pk !== undefined) {
-//                            $.post(url + "Crime/query", {'pk': pk}, function (data) {
-//                                if (data.Result === "OK") {
-//                                    var date = data.Record.crime_date.spl  it("-");
-//                                    $('#datepicker').val(date[0] + "/" + date[1] + "/" + date[2]);
-//                                    $('#txtLat').val(data.Record.crime_lat);
-//                                    $('#txtLng').val(data.Record.crime_lng);
-//                                    $('#crime_detail').val(data.Record.crime_detail);
-//                                } else if (data.Result === "NoAccess") {
-//                                    $('#dialogLogin').dialog("open");
-//                                } else {
-//                                    alert(data.Message);
-//                                }
-//                            });
-//                        }
+                        if (pk !== undefined) {
+                            $.get(url + "Crime/query", {'pk': pk}, function (data) {
+                                if (data.Result === "OK") {
+                                    console.log(data);
+                                    var date = data.Record.crime_date.split("-");
+                                    $('#datePicker').val(date[0] + "/" + date[1] + "/" + date[2]);
+                                    $('#txtLat').val(data.Record.crime_lat);
+                                    $('#txtLng').val(data.Record.crime_lng);
+                                    $('#crime_detail').val(data.Record.crime_detail);
+                                } else if (data.Result === "NoAccess") {
+                                    $('#dialogLogin').dialog("open");
+                                } else {
+                                    alert(data.Message);
+                                }
+                            });
+                        }
 
                         $('#butLatLng').on("click", function () {
                             $('#dialogLatlngPicker').dialog("open");
@@ -41,36 +42,55 @@
                             $('#txtLat').val(latLng.k);
                             $('#txtLng').val(latLng.B);
                         });
-                        $('#datepicker').datepicker({dateFormat: "yy-mm-dd"});
+                        $('#datePicker').datepicker({dateFormat: "yy-mm-dd"});
                         $('#submit').on("click", function () {
-                            $.post(
-                                    url + "Crime/insert",
-                                    $('form').serializeArray(),
-                                    function (data) {
-                                        pk = data.Record.pk;
-                                        $.each($('.upload'), function () {
-                                            console.log($(this)[0].files[0]);
-                                            if ($(this)[0].files[0] != undefined) {
-                                                var data = new FormData();
-                                                data.append("image", $(this)[0].files[0]);
-                                                $.ajax({
-                                                    url: url + "Image/insert",
-                                                    data: data,
-                                                    cache: false,
-                                                    contentType: false,
-                                                    processData: false,
-                                                    type: "POST",
-                                                    success: function (data) {
-                                                        location.replace("index.html?pk=" + pk);
-                                                    }
-                                                });
-                                            }
+                            if (pk === undefined) {
+                                $.post(
+                                        url + "Crime/insert",
+                                        $('form').serializeArray(),
+                                        function (data) {
+                                            pk = data.Record.pk;
+                                            $.each($('.upload'), function () {
+                                                console.log($(this)[0].files[0]);
+                                                if ($(this)[0].files[0] != undefined) {
+                                                    var data = new FormData();
+                                                    data.append("image", $(this)[0].files[0]);
+                                                    $.ajax({
+                                                        url: url + "Image/insert",
+                                                        data: data,
+                                                        cache: false,
+                                                        contentType: false,
+                                                        processData: false,
+                                                        type: "POST",
+                                                        success: function (data) {
+                                                            location.replace("index.html?pk=" + pk);
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                );
+                            } else {
+                                $.post(
+                                        url + "Crime/update",
+                                        {
+                                            'pk' : pk,
+                                            'crime_date' : $('#time_pk').val(),
+                                            'crime_lat' : $('#txtLat').val(),
+                                            'crime_lng' : $('#txtLng').val(),
+                                            'crime_detail' : $('#crime_detail').val(),
+                                            'area_pk' : $('#area_pk').val(),
+                                            'type_pk' : $('#type_pk').val(),
+                                            'place_pk' : $('#place_pk').val(),
+                                            'time_pk' : $('#time_pk').val(),
+                                            'person' : $('#person').val(),
+                                            'check_point' : $('#check_point_pk').val()
+                                        },
+                                        function (data) {
+                                            console.log(data);
                                         });
-                                    }
-                            );
+                            }
                         });
-
-                        //  Upload Image    ////////////////////////////
 
                     }
                 });
@@ -80,11 +100,11 @@
     <body>
         <form>
             <div>
-                วันที่เกิดเหตุ<input type="text" id="datepicker" name="crime_date" />
+                วันที่เกิดเหตุ<input type="text" id="datePicker" name="crime_date" />
             </div>       
             <div>
                 ช่วงเวลาเกิดเหตุ
-                <select class="showLookup" itemid="Time" name="time_pk">
+                <select class="showLookup" itemid="Time" name="time_pk" id="time_pk">
                     <option value="[pk]" >[time_length]</option>
                 </select>
             </div>
@@ -99,44 +119,46 @@
             </div>
             <div>
                 ประเภทคดี
-                <select class="showLookup" itemid="Type" name="type_pk" >
+                <select class="showLookup" itemid="Type" name="type_pk" id="type_pk" >
                     <option value="[pk]" >[name]</option>
                 </select>
             </div>
             <div>
                 เขตพื้นที่
-                <select class="showLookup" itemid="Area" name="area_pk">
+                <select class="showLookup" itemid="Area" name="area_pk" id="area_pk">
                     <option value="[pk]" >[name]</option>
                 </select>
             </div>
             <div>
                 ประเภทสถานที่
-                <select class="showLookup" itemid="Place" name="place_pk">
+                <select class="showLookup" itemid="Place" name="place_pk" id="place_pk">
                     <option value="[pk]" >[name]</option>
                 </select>
             </div>
             <div>
                 ช่วงเวลาเกิดเหตุ
-                <select class="showLookup" itemid="Time" name="Time_pk">
+                <select class="showLookup" itemid="Time" name="Time_pk" id="Time_pk">
                     <option value="[pk]" >[time_length]</option>
                 </select>
             </div>
             <div>
                 จุดตรวจ
-                <select class="showLookup" itemid="CheckPoint" name="check_point_pk">
+                <select class="showLookup" itemid="CheckPoint" name="check_point_pk" id="check_point_pk">
                     <option value="[pk]" >[name]</option>
                 </select>
             </div>
             <div>
                 ผู้เสียหาย/ผู้แจ้งความ
-                <input type="text" />
+                <input type="text" name="person" id="person" />
             </div>
             <div id="uploadImage">
-                <input type="file" accept="image/*" class="upload" />
-                <input type="file" accept="image/*" class="upload" />
-                <input type="file" accept="image/*" class="upload" />
-                <input type="file" accept="image/*" class="upload" />
-                <input type="file" accept="image/*" class="upload" />
+                <form>
+                    <input type="file" accept="image/*" class="upload" />
+                    <input type="file" accept="image/*" class="upload" />
+                    <input type="file" accept="image/*" class="upload" />
+                    <input type="file" accept="image/*" class="upload" />
+                    <input type="file" accept="image/*" class="upload" />
+                </form>
             </div>
             <div>
                 <input id="submit" type="button" value="บันทึก" onchange="selectFile();" />
