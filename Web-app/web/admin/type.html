@@ -4,10 +4,10 @@
     <head>
         <meta charset="UTF-8">
         <link rel="import" type="text/html" href="../html/lib/include.html" />
+        <script src="../js/libs/jquery.canvasResize.js" type="text/javascript"></script>
+        <script src="../js/libs/canvasResize.js" type="text/javascript"></script>
         <script type="text/javascript">
             $(document).ready(function () {
-                var isSetMarkerImage = false;
-
                 $.post(url + "UserService/checkLogin", function (data) {
                     if (data.login == false || data.admin == false) {
                         $('#dialogLogin').dialog("open");
@@ -37,6 +37,7 @@
                                     },
                                     input: function (data) {
                                         return '<form id="upload" enctype="multipart/form-data"><input type="file" accept="image/*" id="file" name="file"/></form><div id="img" ></div>' +
+                                                '<input type="hidden" id="image" name="image" value="false" />' +
                                                 '\x3Cscript type="text/javascript"">' +
                                                 '   $("#file").on("change", function () {' +
                                                 '       var data = new FormData();' +
@@ -51,7 +52,7 @@
                                                 '           processData: false,' +
                                                 '           type: "POST",' +
                                                 '           success: function (data) {' +
-                                                '               isSetMarkerImage = true;' +
+                                                '               $("#image").val(true);' +
                                                 '               $("#img").html(\'<img src="http://\' + data + \'" width="100px" height="100px" />\');' +
                                                 '           }' +
                                                 '       });' +
@@ -61,14 +62,19 @@
                                 },
                                 level: {
                                     title: "ระดับการเข้าถึงข้อมูล",
-                                    input: function (data) {
-                                        if (typeof data.value !== "undefined" && data.value === "0") {
-                                            return '<input type="checkbox" name="level" value="1" /><span>ประชาชนทั่วไปไม่สามารถเข้าถึงได้</span>';
-                                        } else {
-                                            return '<input type="checkbox" name="level" value="1" checked/><span>ประชาชนทั่วไปไม่สามารถเข้าถึงได้</span>';
-                                        }
-                                    },
+//                                    input: function (data) {
+//                                        if (typeof data.value !== "undefined" && data.value === "0") {
+//                                            return '<input type="checkbox" name="level" value="1" /><span>ประชาชนทั่วไปไม่สามารถเข้าถึงได้</span>';
+//                                        } else {
+//                                            return '<input type="checkbox" name="level" value="1" checked/><span>ประชาชนทั่วไปไม่สามารถเข้าถึงได้</span>';
+//                                        }
+//                                    },
+                                    type: 'checkbox',
+                                    values: {'false': 'Passive', 'true': 'Active'},
+                                    defaultValue: 'true',
                                     display: function (data) {
+                                        console.log("display run..." + data.record);
+
                                         if (data.record.level == 1) {
                                             return "ประชาชนไม่สามารถเข้าถึงได้";
                                         } else {
@@ -78,7 +84,7 @@
                                 }
                             },
                             formSubmitting: function (event, data) {
-                                if ($('#file')[0].files.length === 0) {
+                                if (data.row === undefined && $('#file')[0].files.length === 0) {
                                     alert('กรุณาเลือกไฟล์');
                                     return false;
                                 } else {
@@ -86,8 +92,6 @@
                                 }
                             }
                         });
-
-
                         //Load person list from server
                         $('#tableType').jtable('load');
                     }

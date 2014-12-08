@@ -14,8 +14,6 @@
                 for (var i = 0; i < sURLVariables.length; i++) {
                     var sParameterName = sURLVariables[i].split('=');
                     if (sParameterName[0] === "pk") {
-                        // View Mode
-                        console.log("View Mode");
                         var pk = sParameterName[1];
                         $.get(url + "Crime/query", {"pk": pk}, function (data) {
                             console.log(data);
@@ -49,20 +47,29 @@
                                 });
                                 if (data.Record.image.length !== 0) {
                                     $('.bxslider').bxSlider();
-                                } 
+                                }
+
+                                //  Show Edit Button and Delete Button
+                                if (data.Record.access) {
+                                    $('#butEdit').show();
+                                    $('#butDel').show();
+                                }
                             } else if (data.Result === "NoAccess") {
                                 $('#dialogLogin').dialog("open");
                             } else {
                                 alert(data.Message);
                             }
 
+                            //  Delete Crime
                             $('#butDel').on('click', function () {
                                 if (confirm("ยืนยันการลบคดี")) {
-                                    $.post(url + 'Crime/delete', {'pk':data.Record.pk}, function (data) {
+                                    $.post(url + 'Crime/delete', {'pk': data.Record.pk}, function (data) {
                                         console.log(data);
                                     });
                                 }
                             });
+
+                            // Eide Crime
                             $('#butEdit').on('click', function () {
                                 location.replace("update.html?pk=" + data.Record.pk);
                             });
@@ -72,6 +79,17 @@
                         console.log("Add Mode");
                     }
                 }
+
+                // Add Facebook Share Button
+                // Doc.  https://developers.facebook.com/docs/plugins/share-button/
+
+                $('#butFacebookShare').append(
+                        '<iframe src="http://www.facebook.com/plugins/share_button.php?href=http%3A%2F%2F' +
+                        'localhost%3A8080' +
+                        '%2FWeb-app%2Fcrime%2Findex.html%3Fpk%3D' +
+                        pk +
+                        '&layout=button_count" frameborder="0" ></iframe>'
+                        );
             });
 
             function report() {
@@ -84,21 +102,22 @@
     </head>
     <body>
         <div id="imgMap" ></div>
-        <div id="area"></div>
-        <div id="crime_date"></div>
-        <div id="place"></div>
-        <div id="time"></div>
-        <div id="type"></div>
-        <div id="check_point"></div>
-        <div id="person"></div>
-        <div id="crime_detail"></div>        
-        <div id="crime_level"></div>        
-        <div id="update_by_user"></div>
+        เขตพื้นที่: <div id="area"></div>
+        วันที่เกิดเหตุ: <div id="crime_date"></div>
+        สถานที่: <div id="place"></div>
+        ช่วงเวลา: <div id="time"></div>
+        ประเภทคดี: <div id="type"></div>
+        จุดตรวจ: <div id="check_point"></div>
+        เจ้าหน้าที่ผู้รับผิดชอบคดี: <div id="person"></div>
+        รายละเอียด: <div id="crime_detail"></div>        
+        ระดับการเข้าถึง: <div id="crime_level"></div>        
+        เพิ่มโดย: <div id="update_by_user"></div>
         <div id="update_date"></div>
-        <div id="create_by_user"></div>
+        แก้ไขโดย: <div id="create_by_user"></div>
         <div id="create_date"></div>
         <ul id="image" class="bxslider"></ul>
-        <input type="button" id="butEdit" value="แก้ไข" />
-        <input type="button" id="butDel" value="ลบ" />
+        <input style="display: none;" type="button" id="butEdit" value="แก้ไข" />
+        <input style="display: none;" type="button" id="butDel" value="ลบ" />
+        <div id="butFacebookShare" ></div>
     </body>
 </html>

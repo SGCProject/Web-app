@@ -66,29 +66,32 @@
                                                             location.replace("index.html?pk=" + pk);
                                                         }
                                                     });
+                                                } else {
+                                                    location.replace("index.html?pk=" + pk);
                                                 }
                                             });
                                         }
                                 );
+                                pk = undefined;
                             } else {
                                 $.post(
                                         url + "Crime/update",
                                         {
-                                            'pk' : pk,
-                                            'crime_date' : $('#time_pk').val(),
-                                            'crime_lat' : $('#txtLat').val(),
-                                            'crime_lng' : $('#txtLng').val(),
-                                            'crime_detail' : $('#crime_detail').val(),
-                                            'area_pk' : $('#area_pk').val(),
-                                            'type_pk' : $('#type_pk').val(),
-                                            'place_pk' : $('#place_pk').val(),
-                                            'time_pk' : $('#time_pk').val(),
-                                            'person' : $('#person').val(),
-                                            'check_point' : $('#check_point_pk').val()
+                                            'pk': pk,
+                                            'crime_date': $('#time_pk').val(),
+                                            'crime_lat': $('#txtLat').val(),
+                                            'crime_lng': $('#txtLng').val(),
+                                            'crime_detail': $('#crime_detail').val(),
+                                            'area_pk': $('#area_pk').val(),
+                                            'type_pk': $('#type_pk').val(),
+                                            'place_pk': $('#place_pk').val(),
+                                            'time_pk': $('#time_pk').val(),
+                                            'person': $('#person').val(),
+                                            'check_point': $('#check_point_pk').val()
                                         },
-                                        function (data) {
-                                            console.log(data);
-                                        });
+                                function (data) {
+                                    console.log(data);
+                                });
                             }
                         });
 
