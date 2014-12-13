@@ -32,16 +32,17 @@
 //                                        '&language=th-TH' +
 //                                        '&zoom=16' +
 //                                        '&size=500x500" />');
+                                var marker = [data.Record.crime_lat, data.Record.crime_lng];
                                 $('#gmap').gmap3({
                                     map: {
-                                        options: { 
+                                        options: {
                                             zoom: 18,
-                                            center: [data.Record.crime_lat, data.Record.crime_lng]
+                                            center: marker
                                         }
                                     },
                                     marker: {
                                         values: [
-                                            [data.Record.crime_lat, data.Record.crime_lng]
+                                            marker
                                         ]
                                     }
                                 });

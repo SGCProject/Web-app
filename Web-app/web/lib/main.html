@@ -1,0 +1,173 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!--    Include jQuery  -->
+<script src="js/jquery-2.1.0.min.js" type="text/javascript"></script>
+<script src="js/jquery-1.8.3.min.js" type="text/javascript"></script>
+
+<!--    Include Config File -->
+<script src="../config.js" type="text/javascript"></script>
+
+<link href="css/jquery-ui.css" rel="stylesheet" type="text/css"/>
+<script src="js/jquery-ui-1.9.1.min.js" type="text/javascript"></script>
+
+<script>
+    $(function () {
+        $('body').append('<div id="append"></div>');
+        $('#append').html(
+                '<div id="dialogAlert"></div>' +
+                '<div id="dialogLogin" title="เข้าสู่ระบบ">' +
+                '<div>' +
+                '<div>ชื่อบัญชี</div>' +
+                '<div><input type="text" id="txtUserName" /></div>' +
+                '</div>' +
+                '<div>' +
+                '<div>รหัสผ่าน</div>' +
+                '<div><input type="password" id="txtPassword" /></div>' +
+                '</div>' +
+                '<div>' +
+                '<div></div>' +
+                '<div><a id="lnkForgetPassword" href="#" >ลืมรหัสผ่าน</a></div>' +
+                '</div>' +
+                '</div>' +
+                '<div id="dialogChangePassword" >' +
+                '<div>' +
+                '<div>รหัสผ่านเดิม</div>' +
+                '<div><input type="password" id="txtOldPassword" /></div>' +
+                '</div>' +
+                '<div>' +
+                '<div>รหัสผ่านใหม่</div>' +
+                '<div><input type="password" id="txtNewPassword" /></div>' +
+                '</div>' +
+                '<div>' +
+                '<div>ยืนยันรหัสผ่าน</div>' +
+                '<div><input type="password" id="txtConfirmNewPassword" /></div>' +
+                '</div>' +
+                '</div>'
+                );
+
+        $('#txtPassword').on('keypress', function (e) {
+            if (e.which == 13) {
+                $.post(url + "UserService/login",
+                        {
+                            "user_name": $('#txtUserName').val(),
+                            "password": $('#txtPassword').val()
+                        },
+                function (data) {
+                    if (data.Result == "OK") {
+                        location.reload();
+                    } else {
+                        alert(data.Message);
+                    }
+                });
+            }
+        });
+
+        $('#lnkForgetPassword').on('click', function () {
+            var eMail = prompt("ตั่งรหัสผ่านใหม่", "กรอกที่อยู่อีเมลล์");
+
+            if (eMail != null) {
+                $.post(url + "UserService/forgetPassword", {"e_mail": eMail}, function (data) {
+                    if (data.Result == "OK") {
+                        alert("ระบบได้ทำการตั่งรหัสผ่านใหม่และส่งรหัสผ่านไปทางอีเมลล์เรียบร้อยแล้ว...");
+                        return true;
+                    } else {
+                        alert(data.Message);
+                        return false;
+                    }
+                });
+            }
+        });
+
+/////////////////////////////////////////////////////////////////////////////////
+        //  Override jQueryUI dialog default options
+        $.extend($.ui.dialog.prototype.options, {
+            autoOpen: false,
+            resizable: false,
+            draggable: false,
+            modal: true
+        });
+
+        $("#dialogAlert").dialog({
+            buttons: [
+                {
+                    text: "ตกลง",
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            ]
+        });
+
+        $("#dialogLogin").dialog({
+            buttons: [
+                {
+                    text: "เข้าสู่ระบบ",
+                    click: function () {
+                        $.post(url + "UserService/login",
+                                {
+                                    "user_name": $('#txtUserName').val(),
+                                    "password": $('#txtPassword').val()
+                                },
+                        function (data) {
+                            if (data.Result == "OK") {
+                                location.reload();
+                            } else {
+                                alert(data.Message);
+                            }
+                        });
+                    }
+                },
+                {
+                    text: "ยกเลิก",
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            ]
+        });
+
+        $("#dialogChangePassword").dialog({
+            buttons: [
+                {
+                    text: "เปลี่ยนรหัสผ่าน",
+                    click: function () {
+                        if ($('#txtNewPassword').val() == $('#txtConfirmNewPassword').val()) {
+                            $.post(url + "UserService/changePassword",
+                                    {
+                                        "old": $('#txtOldPassword').val(),
+                                        "new": $('#txtNewPassword').val()
+                                    },
+                            function (data) {
+                                if (data.Result == "OK") {
+                                    alert("ระบบทำการตั่งรหัสผ่านใหม่เรียบร้อยแล้ว");
+                                    $("#dialogChangePassword").dialog("close");
+                                    $('#txtOldPassword').val("");
+                                    $('#txtNewPassword').val("");
+                                    $('#txtConfirmPassword').val("");
+                                } else {
+                                    alert(data.Message);
+                                }
+                            });
+                        } else {
+                            alert("รหัสผ่านใหม่ไม่ตรงกัน");
+                        }
+                    }
+                },
+                {
+                    text: "ยกเลิก",
+                    click: function () {
+                        $(this).dialog("close");
+                    }
+                }
+            ]
+        });
+
+        console.log("Include HTML Header");
+
+        window.alert = function (text) {
+            console.log("alert");
+            $("#dialogAlert").html(text);
+            $("#dialogAlert").dialog("open");
+            return false;
+        };
+    });
+</script>
