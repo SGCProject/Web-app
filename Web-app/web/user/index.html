@@ -1,41 +1,49 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <link rel="import" type="text/html" href="../html/lib/include.html" />
-        <script>
-            $(function () {
-                $.post(url + "UserService/checkLogin", function (data) {
-                    if (data.login == false) {
-                        $('#dialogLogin').dialog("open");
-                    }
-                    if (data.admin == true) {
-                        $('#lnkAdmin').css("display", "inline");
-                    }
-                });
-
-                $('#lnkLogout').on("click", function () {
-                    $.post(url + "UserService/logout", function (data) {
-                        if (data.Result == "OK") {
-                            window.location.href = "../";
-                        } else {
-                            alert(data.Message);
-                        }
-                    });
-                });
-
-                $('#lnkChangePassword').on("click", function () {
-                    $('#dialogChangePassword').dialog("open");
-                });
-            });
-        </script>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <link rel="shortcut icon" href="../img/icon/favicon.bmp" />
+        <link rel="import" type="text/html" href="../lib/main.html" />
     </head>
     <body>
-        <a href="../crime/update.html">เพิ่มคดี</a>
-        <a href="../map/index.html">แผนที่</a>
-        <a href="../chart/type.html">กราฟ</a>
-        <a id="lnkAdmin" href="../admin" style="display: none;">จัดการระบบ</a>
-        <a id="lnkChangePassword" href="#">เปลี่ยนรหัสผ่าน</a>
-        <a id="lnkLogout" href="#">ออกจากระบบ</a>
+        <div class="container vcenter visible-user" style="text-align: center;" >
+            <div class="row">
+                <div class="col-xs-10 col-centered" > 
+                    <a class="btn btn-default btn-md btn-primary btn-block" href="../crime/update.html" role="button" style="margin-bottom: 20px;">เพิ่มคดี</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-10 col-centered" > 
+                    <a class="btn btn-default btn-md btn-primary btn-block" href="../map/index.html" role="button" style="margin-bottom: 20px;">แผนที่</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-10 col-centered" > 
+                    <a class="btn btn-default btn-md btn-primary btn-block" href="../chart/type.html" role="button" style="margin-bottom: 20px;">กราฟ</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-10 col-centered" > 
+                    <a class="btn btn-default btn-md btn-primary btn-block" href="report.html" role="button" style="margin-bottom: 20px;">ออกรายงาน</a>
+                </div>
+            </div>
+            <div class="row visible-admin">
+                <div class="col-xs-10 col-centered" > 
+                    <a class="btn btn-default btn-md btn-primary btn-block" href="../admin" role="button" style="margin-bottom: 20px;">จัดการระบบ</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-10 col-centered" > 
+                    <a class="btn btn-default btn-md btn-block cmd-change-pwd" href="#" role="button" style="margin-bottom: 20px;">เปลี่ยนรหัสผ่าน</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-10 col-centered" > 
+                    <a class="btn btn-default btn-md btn-block cmd-logout" href="#" role="button" style="margin-bottom: 20px;">ออกจากระบบ</a>
+                </div>
+            </div>
+        </div>
     </body>
 </html>

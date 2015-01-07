@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <link rel="shortcut icon" href="img/icon/favicon.bmp" />
+        <link rel="import" type="text/html" href="lib/main.html" />
+
+        <script>
+            $(function () {
+                $('#but-login').on('click', function () {
+                    $.post(url + 'UserService/login', {
+                        "user_name": $('#txt-username').val(),
+                        "password": $('#pwd-password').val()
+                    }, function (data) {
+                        if (data.Result === "OK") {
+                            if (data.user === true) {
+                                //  User
+                                window.location.href = "user";
+                            } else {
+                                // Admin
+                                window.location.href = "admin";
+                            }
+                        } else {
+                            alert(data.Message);
+                        }
+                    });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="container vcenter" style="text-align: center;" >
+            <div class="row">
+                <h2>ระบบวิเคราะห์อาชญากรรม<br /><small>โดยใช้พิกัดภูมิศาสตร์</small></h2>
+            </div>
+            <div class="row" style="text-align: center;">
+                <img src="#" class="img-2" />
+            </div>
+            <br />
+            <h2 style="margin-bottom: 20px;"><small>สำหรับเจ้าหน้าที่เข้าสู่ระบบ</small></h2>
+            <div class="row">
+                <div class="col-xs-10 col-centered">
+                    <form>
+                        <div class="form-group">
+                            <label for="txt-username" class="hidden-xs">ชื่อบัญชีผู้ใช้</label>
+                            <input type="text" class="form-control" id="txt-username" placeholder="ชื่อบัญชีผู้ใช้">
+                        </div>
+                    </form>
+                </div>
+                <div class="col-xs-10 col-centered">
+                    <form>
+                        <div class="form-group">
+                            <label for="pwd-password" class="hidden-xs">รหัสผ่าน</label>
+                            <input type="password" class="form-control" id="pwd-password" placeholder="รหัสผ่าน" aria-describedby="inputError2Status">
+                        </div>
+                    </form>
+                </div>
+                <form><div class="checkbox"><label><input type="checkbox"> <span>จดจำบัญชีผู้ใช้</span></label></div></form>
+                <div class="col-xs-10 col-centered" style="margin-bottom: 15px;">
+                    <form><button type="button" id="but-login" class="btn btn-primary btn-block">เข้าสู่ระบบ</button></form>
+                </div>
+                <div class="col-xs-10 col-centered" style="margin-bottom: 30px;">
+                    <form><button type="button" class="btn btn-default btn-block">ลืมรหัสผ่าน</button></form>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+</body>
+<script src="lib/bootstrap-3.3.1/js/bootstrap.min.js" type="text/javascript"></script>
+</html>

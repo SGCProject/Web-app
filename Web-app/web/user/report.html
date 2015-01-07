@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <link rel="import" type="text/html" href="../lib/main.html" />
+        <script>
+            $(function () {
+                $.post(url + "UserService/checkLogin", function (data) {
+                    if (data.login == false) {
+                        $('#dialogLogin').dialog("open");
+                    }
+                });
+
+                $('#start-date').datepicker({
+                    dateFormat: "yy-mm-dd"
+                });
+                $('#end-date').datepicker({
+                    dateFormat: "yy-mm-dd"
+                });
+                $('#selectable').selectable();
+
+                $('#butExport').on('click', function () {
+                    var param = new Object();
+                    if ($("#start-date").datepicker("getDate") !== null &&
+                            $("#end-date").datepicker("getDate") !== null) {
+                        var wong = [];
+                        wong[0] = $("#start-date").datepicker("getDate").yyyymmdd();
+                        wong[1] = $("#end-date").datepicker("getDate").yyyymmdd();
+                        param['wong'] = wong;
+                    }
+
+                    var type = [];
+                    var i = 0;
+                    $('#selectable').find('.ui-selected').each(function () {
+                        type[i++] = $(this).attr('pk');
+                    });
+                    param['type'] = type;
+
+                    $.get(url + "Report/map?parameter=" + JSON.stringify(param), function (data) {
+                        window.location.href = url + "Report/" + data.URL + ".pdf";
+                    });
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div>
+            <ol id="selectable" class="showLookup" itemid="Type">
+                <li class="ui-widget-content ui-selected" pk="[pk]" >[name]</li>
+            </ol>
+        </div>
+        <input type="text" id="start-date" />
+        <input type="text" id="end-date" />
+        <button type="button" id="butExport" />
+    </body>
+    <script src="../js/libs/my.js" type="text/javascript"></script>
+</html>
