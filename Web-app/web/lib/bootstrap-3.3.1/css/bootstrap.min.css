@@ -49,3 +49,7 @@ img{
     float: none;
     margin: 0 auto;
 }
+
+.ui-selected{
+    background-color: #2FAECE;   
+}
