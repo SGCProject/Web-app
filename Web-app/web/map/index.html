@@ -1,7 +1,12 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta charset="UTF-8">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="shortcut icon" href="/Web-app/img/icon/favicon.bmp" />
         <link rel="import" type="text/html" href="../lib/main.html" />
 
         <!-- Include Google Map -->
@@ -9,13 +14,22 @@
 
         <!-- Include gMap3 -->
         <script src="../js/libs/gmap3/gmap3.min.js" type="text/javascript"></script>
+
         <script>
+            setTimeout(function () {
+                $('body').scrollTop();
+//                $('body').scrollTop(50);
+            }, 500);
+
             $(function () {
+                //  Set up
+                $('#option').hide();
+                $('#btn-check-all').hide();
+                $('[id^="opt-"]').hide();
+
                 var map = $("#gmap");
                 var heatmap = new google.maps.visualization.HeatmapLayer();
                 var isHeatmap = false;
-
-                $("#menuType").selectable();
 
                 map.gmap3({
                     map: {
@@ -26,25 +40,70 @@
                     }
                 });
 
-                $(".showLookup").selectable();
-                $('#dialogArea').dialog();
-                $('#dialogPlace').dialog();
-                $('#dialogType').dialog();
-                $('#dialogTime').dialog();
-                $('#dialogCheckPoint').dialog();
+                // 
+//                $('.container *').filter('input').on('click', function () {
+//                    $('.navbar-brand').trigger("focus");
+//                    $('.navbar-brand').blur();
+//                });
 
-                $('#dialogArea').add('#dialogPlace')
-                        .add('#dialogType').add('#dialogTime').add('#dialogCheckPoint')
-                        .on("dialogclose", function (event, ui) {
-                            loadData();
-                        });
-
-                $('#butMapType').on('click', function () {
-                    isHeatmap = !isHeatmap;
+                //
+                $('#btn-optoin').toggle(function () {
+                    $('#option').show();
+                }, function () {
+                    $('#option').hide();
+                    $('#opt-type').hide();
+                    $('#btn-check-all').hide();
+                    $('[id^="opt-"]').hide();
                     loadData();
                 });
 
+                $('#btn-check-all').toggle(function () {
+                    $('#btn-check-all > span').removeClass('glyphicon glyphicon-check');
+                    $('#btn-check-all > span').addClass('glyphicon glyphicon-unchecked');
+                    $('.showLookup').each(function () {
+                        if ($(this).is(":visible")) {
+                            $(this).find('*').removeClass('ui-selected');
+                        }
+                    });
+                }, function () {
+                    $('.showLookup').each(function () {
+                        if ($(this).is(":visible")) {
+                            $(this).find('.list-group-item').addClass('ui-selected');
+                        }
+                    });
+                    $('#btn-check-all > span').removeClass('glyphicon glyphicon-unchecked');
+                    $('#btn-check-all > span').addClass('glyphicon glyphicon-check');
+                });
+
+                $('.btn-opt').on('click', function () {
+                    if ($(this).next().is(":visible")) {
+                        $(this).next().hide();
+                        $('#btn-check-all').hide();
+                    } else {
+                        $('[id^="opt-"]').hide();
+                        $(this).next().show();
+                        $('#btn-check-all').show();
+                    }
+                });
+
+                $('.showLookup').on('click', function (e) {
+                    var item = $(e.target);
+                    if (!item.hasClass('list-group-item')) {
+                        item = item.offsetParent();
+                    }
+                    if (item.hasClass('ui-selected')) {
+                        item.removeClass('ui-selected');
+                        $('#btn-check-all > span').removeClass('glyphicon glyphicon-check');
+                        $('#btn-check-all > span').addClass('glyphicon glyphicon-unchecked');
+                    } else {
+                        item.addClass('ui-selected');
+                    }
+                });
+
+                ////////////////////////////////////////////////////////////////                
                 loadData();
+
+
                 function loadData() {
                     var param = {};
                     var beforId;
@@ -64,7 +123,20 @@
                     });
                     param[beforId] = value;
 
+                    //
+                    if ($('#start-date').val() !== "" && $('#end-date').val() !== "") {
+                        var sDate = $('#start-date').val();
+                        var tmp = sDate.split("/");
+                        sDate = tmp[0];
+                        var eDate = $('#end-date').val();
+                        tmp = eDate.split("/");
+                        eDate = tmp[0];
+                        param['wong'] = [sDate, eDate];
+                        console.log(param['wong']);
+                    }
+
                     $.get(url + "Crime/query?parameter=" + JSON.stringify(param), function (data) {
+                        console.log(param);
                         var markers = [];
 
                         map.gmap3({
@@ -126,63 +198,91 @@
                             });
                         }
                     });
-
-                    // Report
-                    $('#butReport').on("click", function () {
-                        console.log(param);
-//                        $.get(url + "Report/map?parameter=" + JSON.stringify(param), function (data) {
-//                            console.log(data);
-//                        });
-                    });
                 }
 
 
+                // For Debug
+                $('#btn-optoin').trigger('click');
+                
             });
         </script>
-        <style>
-            #gmap {
-                width: 100vw;
-                height: 90vh;
-            }
-        </style>
     </head>
-    <body>
-        <a href="#" onclick="$('#dialogArea').dialog('open');" >เขตพื้นที่</a>
-        <a href="#" onclick="$('#dialogPlace').dialog('open');" >ประเภทสถานที่</a>
-        <a href="#" onclick="$('#dialogTime').dialog('open');" >ช่วงเวลาเกิดเหตุ</a>
-        <a href="#" onclick="$('#dialogType').dialog('open');" >ประเภทคดี</a>
-        <a href="#" onclick="$('#dialogCheckPoint').dialog('open');" >จุดตรวจ</a>
-
-
-        <!-- *************************************************************** -->
-        <div id="dialogPlace" title="ประเภทสถานที่">
-            <ol id="selectable" class="showLookup" itemid="Place">
-                <li class="ui-widget-content ui-selected" pk="[pk]" >[name]</li>
-            </ol>
+    <body style="overflow: hidden;">
+        <div class="container vcenter" style="padding: 0px; overflow: no-display;" >
+            <div class="row">
+                <div class="col-xs-4" style="height: 46px;">
+                    <a class="navbar-brand" href="/Web-app">
+                        <img alt="Brand" src="/Web-app/img/icon/favicon.bmp" style="width: 20px;">
+                    </a>                   
+                </div>
+                <div id="headder" class="col-xs-4" style="text-align: center; height: 46px;">
+                    <h4>แผนที่แสดง<br class="visible-xs" />จุดเกิดเหตุ</h4>
+                </div>
+                <div class="col-xs-4" style="padding-left: 0px;">
+                    <button id="btn-optoin" type=" button" class="btn btn-lg btn-default pull-right" data-toggle="modal" data-target="#myModal">
+                        <span class="glyphicon glyphicon-th-list" aria-hidden="true"></span>
+                    </button>
+                    <button id="btn-check-all" type="button" class="btn btn-lg btn-default pull-right" data-toggle="modal" data-target="#myModal">
+                        <span class="glyphicon glyphicon-check" aria-hidden="true"></span>
+                    </button>
+                </div>
+            </div>            
+            <div class="container vcenter" style="z-index: 500; position: absolute; width: 100vw;">
+                <div id="option" class="row">
+                    <div class="list-group col-xs-12 col-md-6 pull-right" style="padding-right: 0px; max-width: 1200px;">
+                        <!--////////////////////    Date    ///////////////////-->
+                        <a class="list-group-item btn-opt">
+                            <h4 class="list-group-item-heading">วันที่เกิดเหตุ</h4>
+                        </a>
+                        <div id="opt-date" style="background-color: white;">
+                            <input id="start-date" type="date" class="form-control" placeholder="Text input" style="min-width: 175px;">
+                            ถึง
+                            <input id="end-date" type="date" class="form-control" placeholder="Text input" >                                                   
+                        </div>
+                        <!--////////////////////    Type    ///////////////////-->
+                        <a class="list-group-item btn-opt">
+                            <h4 class="list-group-item-heading">ประเภทคดี</h4>
+                        </a>
+                        <div id="opt-type" class="list-group showLookup" itemid="Type" style="margin-bottom: 0px;">
+                            <a class="list-group-item ui-selected" pk="[pk]" ><h4 class="list-group-item-heading">[name]</h4></a>
+                        </div>
+                        <!--////////////////////    Area    ///////////////////-->
+                        <a class="list-group-item btn-opt">
+                            <h4 class="list-group-item-heading">เขตพื้นที่</h4>
+                        </a>
+                        <div id="opt-area" class="list-group showLookup" itemid="Area" style="margin-bottom: 0px;">
+                            <a class="list-group-item ui-selected" pk="[pk]" ><h4 class="list-group-item-heading">[name]</h4></a>
+                        </div>
+                        <!--////////////////////    Time    ///////////////////-->
+                        <a class="list-group-item btn-opt">
+                            <h4 class="list-group-item-heading">ช่วงเวลาเกิดเหตุ</h4>
+                        </a>
+                        <div id="opt-time" class="list-group showLookup" itemid="Time" style="margin-bottom: 0px;">
+                            <a class="list-group-item ui-selected" pk="[pk]" ><h4 class="list-group-item-heading">[time_length]</h4></a>
+                        </div>
+                        <!--////////////////////    Place    ///////////////////-->
+                        <a class="list-group-item btn-opt">
+                            <h4 class="list-group-item-heading">ประเภทสถานที่</h4>
+                        </a>
+                        <div id="opt-place" class="list-group showLookup" itemid="Place" style="margin-bottom: 0px;">
+                            <a class="list-group-item ui-selected" pk="[pk]" ><h4 class="list-group-item-heading">[name]</h4></a>
+                        </div>
+                        <!--////////////////////    Check Point    ///////////////////-->
+                        <a class="list-group-item btn-opt">
+                            <h4 class="list-group-item-heading">จุดตรวจ</h4>
+                        </a>
+                        <div id="opt-check-point" class="list-group showLookup" itemid="CheckPoint" style="margin-bottom: 0px;">
+                            <a class="list-group-item ui-selected" pk="[pk]" ><h4 class="list-group-item-heading">[name]</h4></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div id="dialogArea" title="เขตพื้นที่">
-            <ol id="selectable" class="showLookup" itemid="Area">
-                <li class="ui-widget-content ui-selected" pk="[pk]" >[name]</li>
-            </ol>
-        </div>
-        <div id="dialogTime" title="ช่วงเวลาเกิดเหตุ<">
-            <ol id="selectable" class="showLookup" itemid="Time">
-                <li class="ui-widget-content ui-selected" pk="[pk]" >[time_length]</li>
-            </ol>
-        </div>
-        <div id="dialogType" title="ประเภทคดี">
-            <ol id="selectable" class="showLookup" itemid="Type">
-                <li class="ui-widget-content ui-selected" pk="[pk]" >[name]</li>
-            </ol>
-        </div>
-        <div id="dialogCheckPoint" title="จุดตรวจ">
-            <ol id="selectable" class="showLookup" itemid="CheckPoint">
-                <li class="ui-widget-content ui-selected" pk="[pk]" >[name]</li>
-            </ol>
-        </div>
-        <div id="butMapType">Map Type</div>
-        <div id="butReport">ออกรายงาน</div>
-        <div id="gmap" class="gmap3"></div>
+        <div id="gmap" class="gmap3" style="width: 100vw; height: 100vh; position: absolute; top:46px; z-index: 0;"></div>
     </body>
+    <script src="../lib/bootstrap-3.3.1/js/bootstrap.min.js" type="text/javascript"></script>
     <script src="../js/libs/my.js" type="text/javascript"></script>
+    <script>
+            $('#gmap').height($('#gmap').height() - 46);
+    </script>
 </html>
