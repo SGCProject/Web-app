@@ -1,33 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
-        <meta charset="UTF-8">
-        <link rel="import" type="text/html" href="../lib/main.html" />
-        <script>
-            $(function () {
-                $.post(url + "UserService/checkLogin", function (data) {
-                    if (data.login == false || data.admin == false) {
-                        $('#dialogLogin').dialog("open");
-                    } else {
-                        $('#lnkChangePassword').on("click", function () {
-                            $('#dialogChangePassword').dialog("open");
-                        });
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
 
-                        $('#lnkLogout').on("click", function () {
-                            $.post(url + "UserService/logout", function (data) {
-                                if (data.Result == "OK") {
-                                    window.location.href = "../";
-                                } else {
-                                    alert(data.Message);
-                                }
-                            });
-                        });
-                    }
-                });
-            });
-        </script>
+        <link rel="import" type="text/html" href="/Web-app/libs/main.html" />
     </head>
     <body>
+        <nav class="navbar navbar-default">
+            <div class="container">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">จัดการระบบ</a>
+                </div>
+
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                        <li class="active"><a href="">ประเภทคดี</a></li>
+                        <li class="active"><a href="">เขตพื้นที่</a></li>
+                        <li class="active"><a href="">ประเถทสถานที่</a></li>
+                        <li class="active"><a href="">คำนำหน้าชื่อ</a></li>
+                        <li class="active"><a href="">ช่วงเวลาเกิดเหตุ</a></li>
+                        <li class="active"><a href="">จุดตรวจ</a></li>
+                        <li class="active"><a href="">จัดการบัญชีผู้ใช้</a></li>
+                        <li class="cmd-change-pwd"><a href="">เปลี่ยนรหัสผ่าน</a></li>
+                        <li class="cmd-logout"><a href="">ออกจากระบบ</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
         <a href="type.html">ประเภทคดี</a>
         <a href="area.html">เขตพื้นที่</a>
         <a href="place.html">ประเถทสถานที่</a>
@@ -38,4 +47,5 @@
         <a id="lnkChangePassword" href="#">เปลี่ยนรหัสผ่าน</a>
         <a id="lnkLogout" href="#">ออกจากระบบ</a>
     </body>
+    <script src="../libs/bootstrap-3.3.1/js/bootstrap.min.js" type="text/javascript"></script>
 </html>
