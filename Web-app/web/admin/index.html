@@ -4,48 +4,103 @@
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="/Web-app/img/icon/favicon.bmp" />
 
         <link rel="import" type="text/html" href="/Web-app/libs/main.html" />
+        <link rel="import" type="text/html" href="/Web-app/libs/jTable/main.html" />
+        <script>
+            $(function () {
+                $('#nav-type').on('click', function () {
+                    $('#body').load('type.html');
+                    $('[id^="nav-"]').removeClass('active');
+                    $('#nav-type').addClass('active');
+                    return false;
+                });
+                $('#nav-area').on('click', function () {
+                    $('#body').load('area.html');
+                    $('[id^="nav-"]').removeClass('active');
+                    $('#nav-area').addClass('active');
+                    return false;
+                });
+                $('#nav-place').on('click', function () {
+                    $('#body').load('place.html');
+                    $('[id^="nav-"]').removeClass('active');
+                    $('#nav-place').addClass('active');
+                    return false;
+                });
+                $('#nav-title-name').on('click', function () {
+                    $('#body').load('title-name.html');
+                    $('[id^="nav-"]').removeClass('active');
+                    $('#nav-title-name').addClass('active');
+                    return false;
+                });
+                $('#nav-time').on('click', function () {
+                    $('#body').load('time.html');
+                    $('[id^="nav-"]').removeClass('active');
+                    $('#nav-time').addClass('active');
+                    return false;
+                });
+                $('#nav-check-point').on('click', function () {
+                    $('#body').load('check-point.html');
+                    $('[id^="nav-"]').removeClass('active');
+                    $('#nav-check-point').addClass('active');
+                    return false;
+                });
+                $('#nav-accout').on('click', function () {
+                    $('#body').load('accout.html');
+                    $('[id^="nav-"]').removeClass('active');
+                    $('#nav-accout').addClass('active');
+                    return false;
+                });
+                $('[id^="nav-"]').on('click', function () {
+                    setTimeout(function () {
+                        $('.ui-dialog-buttonset > button').addClass('btn btn-default');
+                        $('.ui-dialog-titlebar > button').remove();
+                        $('.ui-dialog-titlebar').append(
+                                '<button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="$(this).parent(\'*\').parent(\'*\').find(\'.ui-dialog-content\').dialog(\'close\');">' +
+                                '<span aria-hidden="true">×</span>' +
+                                '</button>');
+                    }, 1000);
+                });
+            });
+        </script>
     </head>
     <body>
-        <nav class="navbar navbar-default">
-            <div class="container">
-                <!-- Brand and toggle get grouped for better mobile display -->
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="#">จัดการระบบ</a>
-                </div>
+        <div class="visible-admin">
+            <nav class="navbar navbar-default">
+                <div class="container">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse-1">
+                            <span class="sr-only">Toggle navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <a class="navbar-brand" href="/Web-app">
+                            <img alt="Brand" src="/Web-app/img/icon/favicon.bmp" style="width: 20px;">
+                        </a>   
+                        <div class="navbar-brand">จัดการระบบ</div>
+                    </div>
 
-                <!-- Collect the nav links, forms, and other content for toggling -->
-                <div class="collapse navbar-collapse" id="navbar-collapse-1">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="">ประเภทคดี</a></li>
-                        <li class="active"><a href="">เขตพื้นที่</a></li>
-                        <li class="active"><a href="">ประเถทสถานที่</a></li>
-                        <li class="active"><a href="">คำนำหน้าชื่อ</a></li>
-                        <li class="active"><a href="">ช่วงเวลาเกิดเหตุ</a></li>
-                        <li class="active"><a href="">จุดตรวจ</a></li>
-                        <li class="active"><a href="">จัดการบัญชีผู้ใช้</a></li>
-                        <li class="cmd-change-pwd"><a href="">เปลี่ยนรหัสผ่าน</a></li>
-                        <li class="cmd-logout"><a href="">ออกจากระบบ</a></li>
-                    </ul>
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li id="nav-type"><a href="">ประเภทคดี</a></li>
+                            <li id="nav-area"><a href="">เขตพื้นที่</a></li>
+                            <li id="nav-place"><a href="">ประเถทสถานที่</a></li>
+                            <li id="nav-title-name"><a href="">คำนำหน้าชื่อ</a></li>
+                            <li id="nav-time"><a href="">ช่วงเวลาเกิดเหตุ</a></li>
+                            <li id="nav-check-point"><a href="">จุดตรวจ</a></li>
+                            <li id="nav-accout"><a href="">จัดการบัญชีผู้ใช้</a></li>
+                            <li class="cmd-change-pwd"><a href="">เปลี่ยนรหัสผ่าน</a></li>
+                            <li class="cmd-logout"><a href="">ออกจากระบบ</a></li>
+                        </ul>
+                    </div>
                 </div>
-            </div>
-        </nav>
-        <a href="type.html">ประเภทคดี</a>
-        <a href="area.html">เขตพื้นที่</a>
-        <a href="place.html">ประเถทสถานที่</a>
-        <a href="title_name.html">คำนำหน้าชื่อ</a>
-        <a href="time.html">ช่วงเวลาเกิดเหตุ</a>
-        <a href="check_point.html">จุดตรวจ</a>
-        <a href="user.html">จัดการบัญชีผู้ใช้</a>
-        <a id="lnkChangePassword" href="#">เปลี่ยนรหัสผ่าน</a>
-        <a id="lnkLogout" href="#">ออกจากระบบ</a>
+            </nav>
+            <div id="body" class="container"></div>
+        </div>
     </body>
     <script src="../libs/bootstrap-3.3.1/js/bootstrap.min.js" type="text/javascript"></script>
 </html>

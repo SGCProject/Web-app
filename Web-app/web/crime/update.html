@@ -1,175 +1,282 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <meta charset="UTF-8">
-        <link rel="import" type="text/html" href="../map/latlng_picker.html" />
-        <!--<link href="../js/libs/jqueryui/jquery-ui.css" rel="stylesheet" type="text/css"/>-->
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="/Web-app/img/icon/favicon.bmp" />
+        <link rel="import" type="text/html" href="/Web-app/libs/main.html" />
+
+        <!-- Include Fileinput -->
+        <link href="../libs/bootstrap-fileinput/fileinput.min.css" media="all" rel="stylesheet" type="text/css" />
+        <script src="../libs/bootstrap-fileinput/fileinput.min.js" type="text/javascript"></script>
+
         <!-- Include Google Map -->
-        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1j-b_PdubJrPoK9rX26VKRnWUpR4nd9c"></script>
-
-        <!-- Include gMap3 -->
-        <script src="../js/libs/gmap3/gmap3.min.js" type="text/javascript"></script>
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1j-b_PdubJrPoK9rX26VKRnWUpR4nd9c&libraries=visualization"></script>
+        <link rel="import" type="text/html" href="/Web-app/libs/gmap3/main.html" />
         <script>
-            $(function () {
-                $.post(url + "UserService/checkLogin", function (data) {
-                    if (data.login == false || data.user == false) {
-                        $('#dialogLogin').dialog("open");
-                    } else {
-                        var query = window.location.search.substring(1);
-                        var pair = query.split("=");
-                        var pk = pair[1];
-                        if (pk !== undefined) {
-                            $.get(url + "Crime/query", {'pk': pk}, function (data) {
-                                if (data.Result === "OK") {
-                                    console.log(data);
-                                    var date = data.Record.crime_date.split("-");
-                                    $('#datePicker').val(date[0] + "/" + date[1] + "/" + date[2]);
-                                    $('#txtLat').val(data.Record.crime_lat);
-                                    $('#txtLng').val(data.Record.crime_lng);
-                                    $('#crime_detail').val(data.Record.crime_detail);
-                                } else if (data.Result === "NoAccess") {
-                                    $('#dialogLogin').dialog("open");
-                                } else {
-                                    alert(data.Message);
-                                }
-                            });
-                        }
-
-                        $('#butLatLng').on("click", function () {
-                            $('#dialogLatlngPicker').dialog("open");
-                        });
-                        $('#dialogLatlngPicker').on("dialogclose", function (event, ui) {
-                            $('#txtLat').val(latLng.k);
-                            $('#txtLng').val(latLng.B);
-                        });
-                        $('#datePicker').datepicker({dateFormat: "yy-mm-dd"});
-                        $('#submit').on("click", function () {
-                            if (pk === undefined) {
-                                $.post(
-                                        url + "Crime/insert",
-                                        $('form').serializeArray(),
-                                        function (data) {
-                                            pk = data.Record.pk;
-                                            $.each($('.upload'), function () {
-                                                console.log($(this)[0].files[0]);
-                                                if ($(this)[0].files[0] != undefined) {
-                                                    var data = new FormData();
-                                                    data.append("image", $(this)[0].files[0]);
-                                                    $.ajax({
-                                                        url: url + "Image/insert",
-                                                        data: data,
-                                                        cache: false,
-                                                        contentType: false,
-                                                        processData: false,
-                                                        type: "POST",
-                                                        success: function (data) {
-                                                            location.replace("index.html?pk=" + pk);
-                                                        }
-                                                    });
-                                                } else {
-                                                    location.replace("index.html?pk=" + pk);
-                                                }
-                                            });
-                                        }
-                                );
-                                pk = undefined;
-                            } else {
-                                $.post(
-                                        url + "Crime/update",
-                                        {
-                                            'pk': pk,
-                                            'crime_date': $('#time_pk').val(),
-                                            'crime_lat': $('#txtLat').val(),
-                                            'crime_lng': $('#txtLng').val(),
-                                            'crime_detail': $('#crime_detail').val(),
-                                            'area_pk': $('#area_pk').val(),
-                                            'type_pk': $('#type_pk').val(),
-                                            'place_pk': $('#place_pk').val(),
-                                            'time_pk': $('#time_pk').val(),
-                                            'person': $('#person').val(),
-                                            'check_point': $('#check_point_pk').val()
-                                        },
-                                function (data) {
-                                    console.log(data);
-                                });
-                            }
-                        });
-
-                    }
-                });
-            });
         </script>
     </head>
     <body>
-        <form>
-            <div>
-                วันที่เกิดเหตุ<input type="text" id="datePicker" name="crime_date" />
-            </div>       
-            <div>
-                ช่วงเวลาเกิดเหตุ
-                <select class="showLookup" itemid="Time" name="time_pk" id="time_pk">
-                    <option value="[pk]" >[time_length]</option>
-                </select>
-            </div>
-            <div>
-                <input type="text" id="txtLat" name="crime_lat" />
-                <input type="text" id="txtLng" name="crime_lng" />
-                <input type="button" id="butLatLng" value="แผนที่" />  
-            </div>
-            <div>
-                รายละเอียด
-                <textarea name="crime_detail" id="crime_detail" ></textarea>
-            </div>
-            <div>
-                ประเภทคดี
-                <select class="showLookup" itemid="Type" name="type_pk" id="type_pk" >
-                    <option value="[pk]" >[name]</option>
-                </select>
-            </div>
-            <div>
-                เขตพื้นที่
-                <select class="showLookup" itemid="Area" name="area_pk" id="area_pk">
-                    <option value="[pk]" >[name]</option>
-                </select>
-            </div>
-            <div>
-                ประเภทสถานที่
-                <select class="showLookup" itemid="Place" name="place_pk" id="place_pk">
-                    <option value="[pk]" >[name]</option>
-                </select>
-            </div>
-            <div>
-                ช่วงเวลาเกิดเหตุ
-                <select class="showLookup" itemid="Time" name="Time_pk" id="Time_pk">
-                    <option value="[pk]" >[time_length]</option>
-                </select>
-            </div>
-            <div>
-                จุดตรวจ
-                <select class="showLookup" itemid="CheckPoint" name="check_point_pk" id="check_point_pk">
-                    <option value="[pk]" >[name]</option>
-                </select>
-            </div>
-            <div>
-                ผู้เสียหาย/ผู้แจ้งความ
-                <input type="text" name="person" id="person" />
-            </div>
-            <div id="uploadImage">
-                <form>
-                    <input type="file" accept="image/*" class="upload" />
-                    <input type="file" accept="image/*" class="upload" />
-                    <input type="file" accept="image/*" class="upload" />
-                    <input type="file" accept="image/*" class="upload" />
-                    <input type="file" accept="image/*" class="upload" />
-                </form>
-            </div>
-            <div>
-                <input id="submit" type="button" value="บันทึก" onchange="selectFile();" />
-            </div>
-        </form>
-        <div id="dialogLatlngPicker" >
-            <div id="gmapLatLngPicker" class="gmap3"></div>
+        <div class="container visibld-user">
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="datePicker" class="col-sm-2 control-label">วันที่เกิดเหตุ</label>
+                    <div class="col-sm-10">
+                        <input type="date" class="form-control" id="datePicker">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="time_pk" class="col-sm-2 control-label">ช่วงเวลาเกิดเหตุ</label>
+                    <div class="col-sm-10">
+                        <select class="showLookup form-control" itemid="Time" name="time_pk" id="time_pk">
+                            <option value="[pk]" >[time_length]</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="time_pk" class="col-sm-2 control-label">จุดที่เกิดเหตุ</label>
+                    <div class="col-sm-10">
+                        <div class="latlng-picker">
+                            <input id="txtLat" type="text" class="form-control txt-lat" placeholder="ละติจูล" size="10">
+                            <input id="txtLng" type="text" class="form-control txt-lng" placeholder="ลองติจูล">
+                            <input class="btn-geoloc btn btn-default" type="button" value="at" />
+                            <input class="btn-map" type="button" value="map" />
+                            <div class='gmap' style="position: absolute;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="crime_detail" class="col-sm-2 control-label">รายละเอียด</label>
+                    <div class="col-sm-10">
+                        <textarea id="crime_detail" class="form-control" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="type_pk" class="col-sm-2 control-label">ประเภทคดี</label>
+                    <div class="col-sm-10">
+                        <select class="showLookup form-control" itemid="Type" name="type_pk" id="type_pk">
+                            <option value="[pk]" >[name]</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="area_pk" class="col-sm-2 control-label">เขตพื้นที่</label>
+                    <div class="col-sm-10">
+                        <select class="showLookup form-control" itemid="Area" name="area_pk" id="area_pk">
+                            <option value="[pk]" >[name]</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="place_pk" class="col-sm-2 control-label">ประเภทสถานที่</label>
+                    <div class="col-sm-10">
+                        <select class="showLookup form-control" itemid="Place" name="place_pk" id="place_pk">
+                            <option value="[pk]" >[name]</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="place_pk" class="col-sm-2 control-label">จุดตรวจ</label>
+                    <div class="col-sm-10">
+                        <select class="showLookup form-control" itemid="CheckPoint" name="check_point_pk" id="check_point_pk">
+                            <option value="[pk]" >[name]</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="person" class="col-sm-2 control-label">ผู้เสียหาย/ผู้แจ้งความ</label>
+                    <div class="col-sm-10">
+                        <input type="text" name="person" id="person" class="form-control" placeholder="ผู้เสียหาย/ผู้แจ้งความ" />
+                    </div>
+                </div> 
+                <div class="form-group">
+                    <label for="uploadImage" class="control-label">อัพโหลดรูปภาพ</label>
+                    <div class="form-group">
+                        <input id="uploadImage" class="file" type="file" multiple=true data-preview-file-type="any" data-upload-url="#">
+                    </div>
+                </div>
+                <div>
+                    <input id="submit" type="button" value="บันทึก" />
+                </div>
+            </form>
         </div>
     </body>
-    <script src="../js/libs/my.js" type="text/javascript"></script>
+    <script src="/Web-app/libs/bootstrap-3.3.1/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/Web-app/libs/my.js" type="text/javascript"></script>
+    <script>
+            var query = window.location.search.substring(1);
+            var pair = query.split("=");
+            var pk = pair[1];
+            var initialPreview = [];
+            var initialPreviewConfig = [];
+
+            if (pk !== undefined) {
+                $.get(url + "Crime/query", {'pk': pk}, function (data) {
+                    if (data.Result === "OK") {
+                        if (data.Record.image.length !== 0 && ($.cookie('img') === undefined || $.cookie('img').length === 0)) {
+                            $.cookie('img', data.Record.image);
+                            location.reload();
+                        }
+                        if (data.Record.crime_date !== undefined) {
+                            $('#datePicker').val(data.Record.crime_date);
+                        }
+                        $('#txtLat').val(data.Record.crime_lat);
+                        $('#txtLng').val(data.Record.crime_lng);
+                        $('#crime_detail').val(data.Record.crime_detail);
+                        $('#person').val(data.Record.person);
+                        $('#area_pk').val($('#area_pk').find(":contains('" + data.Record.area + "')").val());
+                        $('#time_pk').val($('#time_pk').find(":contains('" + data.Record.time + "')").val());
+                        $('#type_pk').val($('#type_pk').find(":contains('" + data.Record.type + "')").val());
+                        $('#place_pk').val($('#place_pk').find(":contains('" + data.Record.place + "')").val());
+                        $('#check_point_pk').val($('#check_point_pk').find(":contains('" + data.Record.check_point + "')").val());
+                    } else if (data.Result === "NoAccess") {
+                        $('#dialogLogin').dialog("open");
+                    } else {
+                        alert(data.Message);
+                    }
+                });
+
+            }
+
+            ////////////////////////////////////////////////   
+            if ($.cookie('img') !== undefined && $.cookie('img').length !== 0) {
+                for (var i = 0; i < $.cookie('img').length + 2 - 1; i += 2) {
+                    initialPreview.push('<img src="/image/' + $.cookie('img')[i] + '.jpg" class="file-preview-image">');
+                    initialPreviewConfig.push({url: url + 'Image/delete', key: $.cookie('img')[i]});
+                }
+                setTimeout(function () {
+                    $.removeCookie('img');
+                }, 3000);
+            }
+
+            $("#uploadImage").fileinput({
+                initialPreview: initialPreview,
+                initialPreviewConfig: initialPreviewConfig,
+                overwriteInitial: false,
+                showRemove: false, //  boolean whether to display the file remove/clear button. Defaults to true
+//                            allowedFileExtensions: ['jpg', 'png']
+                browseLabel: 'เลือกรูป',
+                removeLabel: 'ลบ',
+                msgFileNotReadable: 'File "{name}" is not readable.',
+                msgInvalidFileType: 'Invalid type for file "{name}". Only "{types}" files are supported.',
+                msgInvalidFileExtension: 'Invalid extension for file "{name}". Only "{extensions}" files are supported.',
+                dropZoneTitle: 'ลากและวาง รูปภาพ',
+                uploadClass: 'hide',
+                msgSelected: 'รูปภาพมี {n} รูป',
+                layoutTemplates: {
+                    actions: '<div class="file-actions">\n' +
+                            '    <div class="file-footer-buttons">\n' +
+                            '        {delete}' +
+                            '    </div>\n' +
+                            '    <div class="clearfix"></div>\n' +
+                            '</div>'
+                }
+            });
+
+            $('#uploadImage').on('filepredelete', function (event, key) {
+                console.log('Even Del ==> Key = ' + key);
+                if (!confirm()) {
+                    event = null;
+                    key = null;
+                    return false;
+                }
+            });
+
+            $('#datePicker').datepicker({dateFormat: "yy-mm-dd"});
+            $('#submit').on("click", function () {
+                $('form').find('input:file').each(function () {
+                    console.log($(this).files);
+                });
+                if (pk === undefined) {
+                    $.post(
+                            url + "Crime/insert",
+                            {
+                                'crime_date': $('#datePicker').val(),
+                                'crime_lat': $('#txtLat').val(),
+                                'crime_lng': $('#txtLng').val(),
+                                'crime_detail': $('#crime_detail').val(),
+                                'area_pk': $('#area_pk').val(),
+                                'type_pk': $('#type_pk').val(),
+                                'place_pk': $('#place_pk').val(),
+                                'time_pk': $('#time_pk').val(),
+                                'check_point_pk': $('#check_point_pk').val(),
+                                'person': $('#person').val()
+                            },
+                    function (data) {
+                        pk = data.Record.pk;
+                        $.each($('.upload'), function () {
+                            console.log($(this)[0].files[0]);
+                            if ($(this)[0].files[0] !== undefined) {
+                                var data = new FormData();
+                                data.append("image", $(this)[0].files[0]);
+                                $.ajax({
+                                    url: url + "Image/insert",
+                                    data: data,
+                                    cache: false,
+                                    contentType: false,
+                                    processData: false,
+                                    type: "POST",
+                                    success: function (data) {
+                                    }
+                                });
+                            }
+                        });
+                        location.replace("index.html?pk=" + pk);
+                    }
+                    );
+                    pk = undefined;
+                } else {
+                    $.post(
+                            url + "Crime/update",
+                            {
+                                'pk': pk,
+                                'crime_date': $('#datePicker').val(),
+                                'crime_lat': $('#txtLat').val(),
+                                'crime_lng': $('#txtLng').val(),
+                                'crime_detail': $('#crime_detail').val(),
+                                'area_pk': $('#area_pk').val(),
+                                'type_pk': $('#type_pk').val(),
+                                'place_pk': $('#place_pk').val(),
+                                'time_pk': $('#time_pk').val(),
+                                'check_point_pk': $('#check_point_pk').val(),
+                                'person': $('#person').val()
+                            },
+                    function (data) {
+                        if (data.Result === "OK") {
+                            location.replace('/Web-app/crime/index.html?pk=' + pk);
+                        } else {
+                            alert(data.Message);
+                        }
+                    });
+                }
+            });
+
+            $('.latlng-picker .btn-geoloc').on('click', function () {
+                var thisPicker = $(this).parent('.latlng-picker');
+                var map = thisPicker.find('.gmap');
+                map.gmap3({
+                    getgeoloc: {
+                        callback: function (latLng) {
+                            if (latLng) {
+                                thisPicker.find('.txt-lat').val(latLng.lat());
+                                thisPicker.find('.txt-lng').val(latLng.lng());
+//                                    $(this).gmap3({
+//                                        marker: {
+//                                            latLng: latLng
+//                                        },
+//                                        map: {
+//                                            options: {
+//                                                center: latLng,
+//                                                zoom: 16
+//                                            }
+//                                        }
+//                                    });
+                            }
+                        }
+                    }
+                });
+            });
+
+    </script>
 </html>

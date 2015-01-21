@@ -7,33 +7,27 @@
         <link rel="import" type="text/html" href="../lib/jTable.html" />
         <script type="text/javascript">
             $(document).ready(function () {
-                $.post(url + "UserService/checkLogin", function (data) {
-                    if (data.login == false || data.admin == false) {
-                        $('#dialogLogin').dialog("open");
-                    } else {
-                        $('#tableArea').jtable({
-                            title: 'เขตพื้นที่',
-                            actions: {
-                                listAction: url + 'Area/query',
-                                createAction: url + 'Area/insert',
-                                updateAction: url + 'Area/update',
-                                deleteAction: url + 'Area/delete'
-                            },
-                            fields: {
-                                pk: {
-                                    key: true,
-                                    list: false
-                                },
-                                name: {
-                                    title: 'ชื่อเขตพื้นที่',
-                                    width: '40%'
-                                }
-                            }
-                        });
-                        //Load person list from server
-                        $('#tableArea').jtable('load');
+                $('#tableArea').jtable({
+                    title: 'เขตพื้นที่',
+                    actions: {
+                        listAction: url + 'Area/query',
+                        createAction: url + 'Area/insert',
+                        updateAction: url + 'Area/update',
+                        deleteAction: url + 'Area/delete'
+                    },
+                    fields: {
+                        pk: {
+                            key: true,
+                            list: false
+                        },
+                        name: {
+                            title: 'ชื่อเขตพื้นที่',
+                            width: '40%'
+                        }
                     }
                 });
+                //Load person list from server
+                $('#tableArea').jtable('load');
             });
         </script>
     </head>

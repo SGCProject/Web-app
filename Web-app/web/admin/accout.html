@@ -3,8 +3,8 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <link rel="import" type="text/html" href="../lib/main.html" />
-        <link rel="import" type="text/html" href="../lib/jTable.html" />
+        <link rel="import" type="text/html" href="/Web-app/libs/main.html" />
+        <link rel="import" type="text/html" href="/Web-app/libs/jTable/main.html" />
         <script type="text/javascript">
             var title_name = {};
             var access = {1: "ผู้ใช้ทั่วไป", 2: "ผู้ดูแลระบบ", 3: "ผู้ใช้ทั่วไปและผู้ดูแลระบบ"};
@@ -37,7 +37,6 @@
                                         list: false,
                                         input: function (data) {
                                             var text = $('<select name="title_name_pk" ></select>');
-                                            console.log(data.formType);
                                             if (data.formType == "create") {
                                                 text.append('<option value="">โปรดระบุคำนำหน้าชื่อ</option>');
                                             }
@@ -120,6 +119,8 @@
         </script>
     </head>
     <body>
-        <div id="tableUser"></div>
+        <div class="table-responsive">
+            <div id="tableUser"></div>
+        </div>
     </body>
 </html>

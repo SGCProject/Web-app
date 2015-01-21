@@ -7,25 +7,27 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <link rel="shortcut icon" href="/Web-app/img/icon/favicon.bmp" />
-        <link rel="import" type="text/html" href="../lib/main.html" />
 
+        <link rel="import" type="text/html" href="/Web-app/libs/main.html" />
         <!-- Include Google Map -->
         <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1j-b_PdubJrPoK9rX26VKRnWUpR4nd9c&libraries=visualization"></script>
-
-        <!-- Include gMap3 -->
-        <script src="../js/libs/gmap3/gmap3.min.js" type="text/javascript"></script>
+        <link rel="import" type="text/html" href="/Web-app/libs/gmap3/main.html" />
 
         <script>
             setTimeout(function () {
                 $('body').scrollTop();
-//                $('body').scrollTop(50);
+                //                $('body').scrollTop(50);
             }, 500);
 
+            function toggle(a, b) {
+            }
+
             $(function () {
-                //  Set up
+                //  Set up                
                 $('#option').hide();
                 $('#btn-check-all').hide();
                 $('[id^="opt-"]').hide();
+                var toggle = [];
 
                 var map = $("#gmap");
                 var heatmap = new google.maps.visualization.HeatmapLayer();
@@ -41,40 +43,47 @@
                 });
 
                 // 
-//                $('.container *').filter('input').on('click', function () {
-//                    $('.navbar-brand').trigger("focus");
-//                    $('.navbar-brand').blur();
-//                });
+                $('.container *').filter('input').on('click', function () {
+                    $('.navbar-brand').trigger("focus");
+                    $('.navbar-brand').blur();
+                });
 
+                $('#btn-optoin').on('click', function () {
+                    if (toggle['btn-option'] === 1) {
+                        $('#option').hide();
+                        $('#opt-type').hide();
+                        $('#btn-check-all').hide();
+                        $('[id^="opt-"]').hide();
+                        loadData();
+                        toggle['btn-option'] = 0;
+                    } else {
+                        $('#option').show();
+                        toggle['btn-option'] = 1;
+                    }
+                });
+
+                $('#btn-check-all').on('click', function () {
+                    if (toggle['btn-check-all'] === 1) {
+                        $('#btn-check-all > span').removeClass('glyphicon glyphicon-check');
+                        $('#btn-check-all > span').addClass('glyphicon glyphicon-unchecked');
+                        $('.showLookup').each(function () {
+                            if ($(this).is(":visible")) {
+                                $(this).find('*').removeClass('ui-selected');
+                            }
+                        });
+                        toggle['btn-check-all'] = 0;
+                    } else {
+                        $('.showLookup').each(function () {
+                            if ($(this).is(":visible")) {
+                                $(this).find('.list-group-item').addClass('ui-selected');
+                            }
+                        });
+                        $('#btn-check-all > span').removeClass('glyphicon glyphicon-unchecked');
+                        $('#btn-check-all > span').addClass('glyphicon glyphicon-check');
+                        toggle['btn-check-all'] = 1;
+                    }
+                });
                 //
-                $('#btn-optoin').toggle(function () {
-                    $('#option').show();
-                }, function () {
-                    $('#option').hide();
-                    $('#opt-type').hide();
-                    $('#btn-check-all').hide();
-                    $('[id^="opt-"]').hide();
-                    loadData();
-                });
-
-                $('#btn-check-all').toggle(function () {
-                    $('#btn-check-all > span').removeClass('glyphicon glyphicon-check');
-                    $('#btn-check-all > span').addClass('glyphicon glyphicon-unchecked');
-                    $('.showLookup').each(function () {
-                        if ($(this).is(":visible")) {
-                            $(this).find('*').removeClass('ui-selected');
-                        }
-                    });
-                }, function () {
-                    $('.showLookup').each(function () {
-                        if ($(this).is(":visible")) {
-                            $(this).find('.list-group-item').addClass('ui-selected');
-                        }
-                    });
-                    $('#btn-check-all > span').removeClass('glyphicon glyphicon-unchecked');
-                    $('#btn-check-all > span').addClass('glyphicon glyphicon-check');
-                });
-
                 $('.btn-opt').on('click', function () {
                     if ($(this).next().is(":visible")) {
                         $(this).next().hide();
@@ -85,7 +94,7 @@
                         $('#btn-check-all').show();
                     }
                 });
-
+                //
                 $('.showLookup').on('click', function (e) {
                     var item = $(e.target);
                     if (!item.hasClass('list-group-item')) {
@@ -189,7 +198,7 @@
                                         }
                                     },
                                     cluster: {
-                                        radius: 100,
+                                        radius: 1,
                                         0: {
                                             content: "<div class='cluster cluster-1'><h1>CLUSTER_COUNT</h1></div>"
                                         }
@@ -202,8 +211,8 @@
 
 
                 // For Debug
-                $('#btn-optoin').trigger('click');
-                
+//                $('#btn-optoin').trigger('click');
+
             });
         </script>
     </head>
@@ -280,8 +289,8 @@
         </div>
         <div id="gmap" class="gmap3" style="width: 100vw; height: 100vh; position: absolute; top:46px; z-index: 0;"></div>
     </body>
-    <script src="../lib/bootstrap-3.3.1/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="../js/libs/my.js" type="text/javascript"></script>
+    <script src="/Web-app/libs/bootstrap-3.3.1/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/Web-app/libs/my.js" type="text/javascript"></script>
     <script>
             $('#gmap').height($('#gmap').height() - 46);
     </script>

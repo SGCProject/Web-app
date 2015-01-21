@@ -21,7 +21,6 @@
                     if (sParameterName[0] === "pk") {
                         var pk = sParameterName[1];
                         $.get(url + "Crime/query", {"pk": pk}, function (data) {
-                            console.log(data);
                             if (data.Result === "OK") {
 //                                $('#imgMap').html(
 //                                        '<img src="https://maps.googleapis.com/maps/api/staticmap?' +

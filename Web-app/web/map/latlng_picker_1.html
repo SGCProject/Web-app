@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+        <meta name="apple-mobile-web-app-capable" content="yes">   
+        <link rel="shortcut icon" href="/Web-app/img/icon/favicon.bmp" />
+
+        <link rel="import" type="text/html" href="/Web-app/libs/main.html" />
+        <!-- Include Google Map -->
+        <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC1j-b_PdubJrPoK9rX26VKRnWUpR4nd9c&libraries=visualization"></script>
+        <link rel="import" type="text/html" href="/Web-app/libs/gmap3/main.html" />
+
+        <script>
+            $(function () {
+//                $('gmap').hide();
+
+                $('.latlng-picker').append(
+                        '<input class="txt-lat" type="text" />' +
+                        '<input class="txt-lng" type="text" />' +
+                        '<input class="btn-geoloc" type="button" value="at" />' +
+                        '<input class="btn-map" type="button" value="map" />' +
+                        '<div class="gmap" style="position: absolute;"></div>');
+
+                $('.latlng-picker > .btn-geoloc').on('click', function () {
+                    var thisPicker = $(this).parent('.latlng-picker');
+                    var map = thisPicker.find('.gmap');
+                    map.gmap3({
+                        getgeoloc: {
+                            callback: function (latLng) {
+                                if (latLng) {
+                                    thisPicker.find('.txt-lat').val(latLng.lat());
+                                    thisPicker.find('.txt-lng').val(latLng.lng());
+//                                    $(this).gmap3({
+//                                        marker: {
+//                                            latLng: latLng
+//                                        },
+//                                        map: {
+//                                            options: {
+//                                                center: latLng,
+//                                                zoom: 16
+//                                            }
+//                                        }
+//                                    });
+                                }
+                            }
+                        }
+                    });
+                });
+
+//                $('.latlng-picker > .btn-map').on('click', function () {
+//                    if (toggle['btn-map'] === 0) {
+//                        $('#gmap').hide();
+//                        toggle['btn-map'] = 1;
+//                    } else {
+//                        $('#gmap').show();
+//                        toggle['btn-map'] = 0;
+//                    }
+//                });
+
+
+            });
+        </script>
+    </head>
+    <body style="overflow: hidden;">
+        <div class="latlng-picker">
+<!--            <input class="txt-lat" type="text" />
+            <input class="txt-lng" type="text" />
+            <input class="btn-geoloc" type="button" value="at" />
+            <input class="btn-map" type="button" value="map" />
+            <div class='gmap' style="position: absolute;"></div>-->
+        </div>
+        123
+    </body>
+    <script src="/Web-app/libs/bootstrap-3.3.1/js/bootstrap.min.js" type="text/javascript"></script>
+    <script src="/Web-app/libs/my.js" type="text/javascript"></script>
+</html>

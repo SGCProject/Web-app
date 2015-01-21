@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="shortcut icon" href="/Web-app/img/icon/favicon.bmp" />
+        <link rel="import" type="text/html" href="/Web-app/libs/main.html" />
+        <script>
+            $(function () {
+                $('.btn').click(function () {
+                    $('#myModal').modal();
+                });
+            });
+        </script>
+    </head>
+    <body>                
+        <a href="#" class="btn">Launch modal</a>   
+        <div id="myModal" class="modal">
+            <p>Bootstrap tutorials by Siam HTML</p>
+        </div>
+    </body>
+    <script src="/Web-app/libs/bootstrap-3.3.1/js/bootstrap.min.js" type="text/javascript"></script>
+</html>

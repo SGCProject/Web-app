@@ -15,7 +15,6 @@ function showLookup() {
             type: "POST",
             url: url + item + "/query",
             success: function (data) {
-                el.attr("size", Object.keys(data).length);
                 $.each(data.Records, function () {
                     result += eval("\"" + tmp + "\"");
                 });
