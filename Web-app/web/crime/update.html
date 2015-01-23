@@ -140,11 +140,14 @@
             }
 
             ////////////////////////////////////////////////   
+            console.log($.cookie('img'));
             if ($.cookie('img') !== undefined && $.cookie('img').length !== 0) {
-                for (var i = 0; i < $.cookie('img').length + 2 - 1; i += 2) {
-                    initialPreview.push('<img src="/image/' + $.cookie('img')[i] + '.jpg" class="file-preview-image">');
-                    initialPreviewConfig.push({url: url + 'Image/delete', key: $.cookie('img')[i]});
-                }
+                $.each($.parseJSON('[' + $.cookie('img') + ']'), function() {
+                    console.log(this);
+                    initialPreview.push('<img src="/image/' + this + '.jpg" class="file-preview-image">');
+                    initialPreviewConfig.push({url: url + 'Image/delete', key: this});
+                });
+                
                 setTimeout(function () {
                     $.removeCookie('img');
                 }, 3000);
@@ -185,9 +188,6 @@
 
             $('#datePicker').datepicker({dateFormat: "yy-mm-dd"});
             $('#submit').on("click", function () {
-                $('form').find('input:file').each(function () {
-                    console.log($(this).files);
-                });
                 if (pk === undefined) {
                     $.post(
                             url + "Crime/insert",
@@ -205,11 +205,12 @@
                             },
                     function (data) {
                         pk = data.Record.pk;
-                        $.each($('.upload'), function () {
-                            console.log($(this)[0].files[0]);
-                            if ($(this)[0].files[0] !== undefined) {
+                        $('form').find('input:file').each(function () {
+                            console.log(this.files);
+                            $.each(this.files, function () {
+                                console.log(this);
                                 var data = new FormData();
-                                data.append("image", $(this)[0].files[0]);
+                                data.append("image", this);
                                 $.ajax({
                                     url: url + "Image/insert",
                                     data: data,
@@ -218,11 +219,12 @@
                                     processData: false,
                                     type: "POST",
                                     success: function (data) {
+                                        
                                     }
                                 });
-                            }
+                            });
                         });
-                        location.replace("index.html?pk=" + pk);
+                        window.location.href = "index.html?pk=" + pk;
                     }
                     );
                     pk = undefined;
@@ -244,7 +246,27 @@
                             },
                     function (data) {
                         if (data.Result === "OK") {
-                            location.replace('/Web-app/crime/index.html?pk=' + pk);
+                            $('form').find('input:file').each(function () {
+                                console.log(this.files);
+                                $.each(this.files, function () {
+                                    console.log(this);
+                                    var data = new FormData();
+                                    data.append("image", this);
+                                    $.ajax({
+                                        url: url + "Image/insert",
+                                        data: data,
+                                        cache: false,
+                                        contentType: false,
+                                        processData: false,
+                                        type: "POST",
+                                        success: function (data) {
+                                        }
+                                    });
+                                }); 
+                                $("body").ajaxStop(function() {
+                                    window.location.href = '/Web-app/crime/index.html?pk=' + pk;
+                                });
+                            });
                         } else {
                             alert(data.Message);
                         }

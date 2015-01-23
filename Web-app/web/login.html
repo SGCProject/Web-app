@@ -16,10 +16,10 @@
                     }, function (data) {
                         if (data.Result === "OK") {
                             if (data.user === true) {
-                                location.replace('user');
+                                window.location.href = 'user';
                             }
                             if (data.admin === true) {
-                                location.replace('admin');
+                                window.location.href = 'admin';
                             }
                         }
                     });

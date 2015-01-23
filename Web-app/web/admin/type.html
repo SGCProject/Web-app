@@ -51,7 +51,7 @@
                                                 '           data.append("file", file);' +
                                                 '       });' +
                                                 '       $.ajax({' +
-                                                '           url: url + "Upload/marker",' +
+                                                '           url: url + "Upload/marker",' + 
                                                 '           data: data,' +
                                                 '           cache: false,' +
                                                 '           contentType: false,' +
@@ -59,7 +59,7 @@
                                                 '           type: "POST",' +
                                                 '           success: function (data) {' +
                                                 '               $("#image").val(true);' +
-                                                '               $("#img").html(\'<img src="http://\' + data + \'?dummy=\' + $.now() + \'" width="100px" height="100px" />\');' +
+                                                '               $("#img").html(\'<img src="/' + data + '?dummy=\' + $.now() + \'" width="100px" height="100px" />\');' +
                                                 '           }' +
                                                 '       });' +
                                                 '   }); ' +
