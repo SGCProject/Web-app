@@ -25,6 +25,7 @@
                     if (sParameterName[0] === "pk") {
                         var pk = sParameterName[1];
                         $.get(url + "Crime/query", {"pk": pk}, function (data) {
+                            console.log(data);
                             if (data.Result === "OK") {
 //                                $('#imgMap').html(
 //                                        '<img src="https://maps.googleapis.com/maps/api/staticmap?' +
@@ -57,11 +58,8 @@
                                 $('#time').text(data.Record.time);
                                 $('#type').text(data.Record.type);
                                 $('#check_point').text(data.Record.check_point);
-                                $('#person').text(data.Record.person);
                                 $('#crime_detail').text(data.Record.crime_detail);
-                                $('#create_by_user').text(data.Record.create_by_user);
                                 $('#create_date').text(data.Record.create_date);
-                                $('#update_by_user').text(data.Record.update_by_user);
                                 $('#update_date').text(data.Record.update_date);
 
                                 $.each(data.Record.image, function () {
@@ -75,19 +73,22 @@
 
 
                                 if (data.Record.access) {
-                                    //  Show Edit Button and Delete Button
-                                    $('#butEdit').show();
-                                    $('#butDel').show();
+                                    $('#create_by_user').text(data.Record.create_by_user);
+                                    $('#update_by_user').text(data.Record.update_by_user);
+                                    $('#person').text(data.Record.person);
+
                                     // Show Access
                                     if (data.Record.crime_level == "0") {
                                         $('#crime_level').text("เปิดเผย");
                                     } else {
                                         $('#crime_level').text("เป็นความลับ");
                                     }
-                                    $('#txtCrimeLevel').show();
                                 }
                             } else if (data.Result === "NoAccess") {
-                                $('#dialogLogin').dialog("open");
+                                $('body > *').not('#append').hide();
+                                alert('ไม่มีสิทธิ์เข้าถึงคดีนี้ กรุณาเข้าสู่ระบบ', function () {
+                                    window.location.href = '/Web-app/login.html';
+                                });
                             } else {
                                 alert(data.Message);
                             }
@@ -111,8 +112,11 @@
                             });
                         });
                     } else {
-                        // Add mode
-                        console.log("Add Mode");
+                        $('body > *').not('#append').hide();
+                        var pk = prompt("กรุณากรอกเลขที่คดี", "เลขที่คดี");
+                        if (pk.match([0-9])) {
+                            window.location.href = "index.html?pk=" + pk;
+                        }
                     }
                 }
 
@@ -126,7 +130,7 @@
                         pk +
                         '&layout=button_count" frameborder="0" ></iframe>'
                         );
-                
+
                 $('#QR').attr('src', 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data=' + window.location.href);
             });
         </script>
@@ -139,64 +143,65 @@
     </head>
     <body>
         <div class="container">
-                <div id="gmap" class="gmap3" >
-                </div>
-                <div class="row">
-                    <div class="col-xs-4 col-lg-2">คดีเลขที่:</div>
-                    <div id="pk" class="col-xs-8 col-lg-10"></div>
-                </div>
-                <div class="row">
-                    เขตพื้นที่: <div id="area">-</div>
-                </div>
-                <div class="row">
-                    วันที่เกิดเหตุ: <div id="crime_date">-</div>
-                </div>
-                <div class="row">
-                    สถานที่: <div id="place">-</div>
-                </div>
-                <div class="row">
-                    ช่วงเวลา: <div id="time">-</div>
-                </div>
-                <div class="row">
-                    ประเภทคดี: <div id="type">-</div>
-                </div>
-                <div class="row">
-                    จุดตรวจ: <div id="check_point">-</div>
-                </div>
-                <div class="row">
-                    เจ้าหน้าที่ผู้รับผิดชอบคดี: <div id="person">-</div>
-                </div>
-                <div class="row">
-                    รายละเอียด: <div id="crime_detail">-</div>    
-                </div>
-                <div class="row">                    
-                    เพิ่มโดย: <div id="create_by_user">-</div>
-                </div>
-                <div class="row">
-                    วันที่เพิ่ม:<div id="create_date">-</div>
-                </div>
-                <div class="row">
-                    แก้ไขโดย: <div id="update_by_user">-</div>
-                </div>
-                <div class="row">
-                    วันที่แก้ไข: <div id="update_date">-</div>
-                </div>
-                <div class="row">
-                    <div style="display: none;" id="txtCrimeLevel">ระดับการเข้าถึง: <div id="crime_level">-</div></div>
-                </div>
-                <div class="row">
-                    <ul id="image" class="bxslider"></ul>
-                </div>
-                <div class="row">
-                    <input type="button" id="butEdit" value="แก้ไข" class="visible-user btn btn-default" />
-                    <input type="button" id="butDel" value="ลบ" class="visible-user btn btn-default" />
-                </div>
-                <div class="row">
-                    <img id="QR"></div>
-                </div>
-                <div class="row">
-                    <div id="butFacebookShare" ></div>
-                </div>
+            <div id="gmap" class="gmap3" >
+            </div>
+            <div class="row">
+                <div class="col-xs-4 col-lg-2">คดีเลขที่:</div>
+                <div id="pk" class="col-xs-8 col-lg-10"></div>
+            </div>
+            <div class="row">
+                เขตพื้นที่: <div id="area">-</div>
+            </div>
+            <div class="row">
+                วันที่เกิดเหตุ: <div id="crime_date">-</div>
+            </div>
+            <div class="row">
+                สถานที่: <div id="place">-</div>
+            </div>
+            <div class="row">
+                ช่วงเวลา: <div id="time">-</div>
+            </div>
+            <div class="row">
+                ประเภทคดี: <div id="type">-</div>
+            </div>
+            <div class="row">
+                จุดตรวจ: <div id="check_point">-</div>
+            </div>
+            <!--                <div class="row">
+                                เจ้าหน้าที่ผู้รับผิดชอบคดี: <div id="person">-</div>
+                            </div>-->
+            <div class="row">
+                รายละเอียด: <div id="crime_detail">-</div>    
+            </div>
+            <div class="row visible-user">                    
+                เพิ่มโดย: <div id="create_by_user">-</div>
+            </div>
+            <div class="row">
+                วันที่เพิ่ม:<div id="create_date">-</div>
+            </div>
+            <div class="row visible-user">
+                แก้ไขโดย: <div id="update_by_user">-</div>
+            </div>
+            <div class="row">
+                วันที่แก้ไข: <div id="update_date">-</div>
+            </div>
+            <div class="row">
+                <div id="txtCrimeLevel" class="visible-user">ระดับการเข้าถึง: <div id="crime_level">-</div></div>
+            </div>
+            <div class="row">
+                <ul id="image" class="bxslider"></ul>
+            </div>
+            <div class="row visible-user">
+                <input type="button" id="butEdit" value="แก้ไข" class="btn btn-default" />
+                <input type="button" id="butDel" value="ลบ" class="btn btn-default" />
+            </div>
+            <div class="row">
+                <img id="QR">
+            </div>
+        </div>
+        <div class="row">
+            <div id="butFacebookShare" ></div>
+        </div>
     </body>
     <script src="/Web-app/libs/bootstrap-3.3.1/js/bootstrap.min.js" type="text/javascript"></script>
 </html>

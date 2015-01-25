@@ -18,7 +18,7 @@
         </script>
     </head>
     <body>
-        <div class="container visibld-user">
+        <div class="container visible-user">
             <form class="form-horizontal">
                 <div class="form-group">
                     <label for="datePicker" class="col-sm-2 control-label">วันที่เกิดเหตุ</label>
@@ -112,7 +112,7 @@
             var initialPreviewConfig = [];
 
             if (pk !== undefined) {
-                $.get(url + "Crime/query", {'pk': pk}, function (data) {
+                $.post(url + "Crime/query", {'pk': pk}, function (data) {
                     if (data.Result === "OK") {
                         if (data.Record.image.length !== 0 && ($.cookie('img') === undefined || $.cookie('img').length === 0)) {
                             $.cookie('img', data.Record.image);
@@ -142,12 +142,12 @@
             ////////////////////////////////////////////////   
             console.log($.cookie('img'));
             if ($.cookie('img') !== undefined && $.cookie('img').length !== 0) {
-                $.each($.parseJSON('[' + $.cookie('img') + ']'), function() {
+                $.each($.parseJSON('[' + $.cookie('img') + ']'), function () {
                     console.log(this);
                     initialPreview.push('<img src="/image/' + this + '.jpg" class="file-preview-image">');
                     initialPreviewConfig.push({url: url + 'Image/delete', key: this});
                 });
-                
+
                 setTimeout(function () {
                     $.removeCookie('img');
                 }, 3000);
@@ -204,29 +204,33 @@
                                 'person': $('#person').val()
                             },
                     function (data) {
-                        pk = data.Record.pk;
-                        $('form').find('input:file').each(function () {
-                            console.log(this.files);
-                            $.each(this.files, function () {
-                                console.log(this);
-                                var data = new FormData();
-                                data.append("image", this);
-                                $.ajax({
-                                    url: url + "Image/insert",
-                                    data: data,
-                                    cache: false,
-                                    contentType: false,
-                                    processData: false,
-                                    type: "POST",
-                                    success: function (data) {
-                                        
-                                    }
+                        if (data.Result === "OK") {
+                            var rq = [];
+                            $('form').find('input:file').each(function () {
+                                $.each(this.files, function (i) {
+                                    console.log(this);
+                                    var data = new FormData();
+                                    data.append("image", this);
+                                    rq[i] = $.ajax({
+                                        url: url + "Image/insert",
+                                        data: data,
+                                        cache: false,
+                                        contentType: false,
+                                        processData: false,
+                                        type: "POST",
+                                        success: function (data) {
+
+                                        }
+                                    });
+                                });
+                                $.when(rq).done(function (rq) {
+                                    window.location.href = '/Web-app/crime/index.html?pk=' + pk;
                                 });
                             });
-                        });
-                        window.location.href = "index.html?pk=" + pk;
-                    }
-                    );
+                        } else {
+                            alert(data.Message);
+                        }
+                    });
                     pk = undefined;
                 } else {
                     $.post(
@@ -247,8 +251,8 @@
                     function (data) {
                         if (data.Result === "OK") {
                             $('form').find('input:file').each(function () {
-                                console.log(this.files);
-                                $.each(this.files, function () {
+                                var count = this.files.length;
+                                $.each(this.files, function (i) {
                                     console.log(this);
                                     var data = new FormData();
                                     data.append("image", this);
@@ -256,15 +260,16 @@
                                         url: url + "Image/insert",
                                         data: data,
                                         cache: false,
+                                        async: false,
                                         contentType: false,
                                         processData: false,
                                         type: "POST",
                                         success: function (data) {
+                                            if (i + 1 === count) {
+                                                window.location.href = '/Web-app/crime/index.html?pk=' + pk;
+                                            }
                                         }
                                     });
-                                }); 
-                                $("body").ajaxStop(function() {
-                                    window.location.href = '/Web-app/crime/index.html?pk=' + pk;
                                 });
                             });
                         } else {

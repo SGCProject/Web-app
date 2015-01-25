@@ -23,27 +23,49 @@
 
 <script>
     function checkLogin() {
-        $.post(url + "UserService/checkLogin", function (data) {
-            console.log(data.login);
-            if (data.login == false) {
-                window.location.href = "/Web-app/login.html";
+//        $.post(url + "UserService/checkLogin", function (data) {
+//            if (data.login == false) {
+////                window.location.href = "/Web-app/login.html";
 //                $('#dialogLogin').dialog("open");
-            } else {
-                if (data.admin === true) {
-                    $('.visible-admin').show();
-                }
-                if (data.user === true) {
-                    $('.visible-user').show();
-                }
-            }
-        });
+//            } else {
+//                if (data.admin === true) {
+//                    $('.visible-admin').show();
+//                }
+//                if (data.user === true) {
+//                    $('.visible-user').show();
+//                }
+//            }
+//        });
     }
 
     $(function () {
         var toggle = [];
 
         if ($('.visible-admin').add('.visible-user').size() !== 0) {
-            checkLogin();
+            $.post(url + "UserService/checkLogin", function (data) {
+                if (data.login === false && $('body > .visible-admin:first-child').add('body > .visible-user:first-child').size() !== 0) {
+                    alert('กรุณาลงชื่อเช้าใช้', function () {
+                        window.location.href = "/Web-app/login.html";
+                    });
+                } else {
+                    if ($('body > .visible-user:first-child').size() !== 0 && data.user === false) {
+                        alert('คุณไม่มีสิทธ์ใช้งานในส่วนนี้', function () {
+                            window.location.href = "/Web-app/login.html";
+                        });
+                    }
+                    if ($('body > .visible-admin:first-child').size() !== 0 && data.admin === false) {
+                        alert('คุณไม่มีสิทธ์ใช้งานในส่วนนี้', function () {
+                            window.location.href = "/Web-app/login.html";
+                        });
+                    }
+                    if (data.admin === true) {
+                        $('.visible-admin').show();
+                    }
+                    if (data.user === true) {
+                        $('.visible-user').show();
+                    }
+                }
+            });
         }
 
 ////////////////////////////////////////////////////////////////////////////////        
@@ -80,7 +102,7 @@
                 '</div>' +
                 '</div>'
                 );
-
+        
         $('#txtPassword').on('keypress', function (e) {
             if (e.which == 13) {
                 $.post(url + "UserService/login",
@@ -143,6 +165,9 @@
 
         //  Override jQueryUI dialog default options
         $.extend($.ui.dialog.prototype.options, {
+            open: function (event, ui) {
+                console.log('Dialog open.');
+            },
             autoOpen: false,
             resizable: false,
             draggable: false,
@@ -234,10 +259,14 @@
 
         console.log("Include HTML Header");
 
-        window.alert = function (text) {
+        window.alert = function (text, fnc) {
             $("#dialogAlert").html(text);
+            if (fnc !== undefined) {
+                $("#dialogAlert").dialog({
+                    close: fnc
+                });
+            }
             $("#dialogAlert").dialog("open");
-            return false;
         };
 
         ////////////////////////////////////////////////////////////////////////
