@@ -3,8 +3,8 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <link rel="import" type="text/html" href="../lib/main.html" />
-        <link rel="import" type="text/html" href="../lib/jTable.html" />
+        <link rel="import" type="text/html" href="../lib/smain.html" />
+        <link rel="import" type="text/html" href="../libs/jTable.html" />
         <script type="text/javascript">
             $(document).ready(function () {
                 $('#tableArea').jtable({
@@ -24,6 +24,10 @@
                             title: 'ชื่อเขตพื้นที่',
                             width: '40%'
                         }
+                    },
+                    recordAdded: function (event, data) {
+                        console.log('recordAdded');
+                        $('html,body').animate({scrollTop: $('body').height()}, 500);
                     }
                 });
                 //Load person list from server

@@ -20,6 +20,13 @@
             $(function () {
                 var sPageURL = window.location.search.substring(1);
                 var sURLVariables = sPageURL.split('&');
+
+                if (!'print' in window) {
+                    $('#btn-print').hide();
+                }
+
+                $('#QR').attr('src', 'https://api.qrserver.com/v1/create-qr-code/?size=99x99&margin=0&data=' + window.location.href);
+
                 for (var i = 0; i < sURLVariables.length; i++) {
                     var sParameterName = sURLVariables[i].split('=');
                     if (sParameterName[0] === "pk") {
@@ -27,16 +34,34 @@
                         $.get(url + "Crime/query", {"pk": pk}, function (data) {
                             console.log(data);
                             if (data.Result === "OK") {
-//                                $('#imgMap').html(
-//                                        '<img src="https://maps.googleapis.com/maps/api/staticmap?' +
-//                                        'center=' + data.Record.crime_lat + ',' + data.Record.crime_lng +
-//                                        '&markers=' + data.Record.crime_lat + ',' + data.Record.crime_lng +
-//                                        '&maptype=hybrid' +
-//                                        '&feature:road' +
-//                                        '&language=th-TH' +
-//                                        '&zoom=16' +
-//                                        '&size=500x500" />');
-                                $('#gmap').gmap3({
+                                $('#pk').text(data.Record.pk);
+                                $('#area').text(data.Record.area);
+                                $('#crime_date').text(data.Record.crime_date);
+                                $('#place').text(data.Record.place);
+                                $('#time').text(data.Record.time);
+                                $('#type').text(data.Record.type);
+                                $('#check_point').text(data.Record.check_point);
+                                $('#crime_detail').text(data.Record.crime_detail);
+                                $('#create_date').text(data.Record.create_date);
+                                $('#update_date').text(data.Record.update_date);
+                                
+                                $.each(data.Record.image, function () {
+                                    $('#image').append('<li><center><img src="/image/' + this + '.jpg" style="height: 30vh;" /></center></li>');
+                                    $('#img-for-print').append('<img src="/image/' + this + '.jpg" style="margin: 5px;" class="img-thumbnail" />');
+                                });
+                                
+                                // Show Image
+                                if (data.Record.image.length !== 0) {
+                                    $('.bxslider').bxSlider({
+                                        auto: true,
+                                        pause: 7000,
+                                        speed: 250
+//                                        autoControls: true
+                                    });
+                                }
+
+                                var gmapHeigth = $(document).height() - ($('#topic').height() + $('#material').height() + $('.bx-wrapper').height() + 60);
+                                $('#gmap').height(gmapHeigth  + 'px').width('100%').gmap3({
                                     map: {
                                         options: {
                                             zoom: 18,
@@ -50,26 +75,16 @@
                                     }
                                 });
 
+                                $('#imgMap').html(
+                                        '<img style="text-align: center;" class="visible-print-inline-block" src="https://maps.googleapis.com/maps/api/staticmap?' +
+                                        'center=' + data.Record.crime_lat + ',' + data.Record.crime_lng +
+                                        '&markers=' + data.Record.crime_lat + ',' + data.Record.crime_lng +
+                                        '&maptype=hybrid' +
+                                        '&feature:road' +
+                                        '&language=th-TH' +
+                                        '&zoom=16' +
+                                        '&size=800x400" />');
 
-                                $('#pk').text(data.Record.pk);
-                                $('#area').text(data.Record.area);
-                                $('#crime_date').text(data.Record.crime_date);
-                                $('#place').text(data.Record.place);
-                                $('#time').text(data.Record.time);
-                                $('#type').text(data.Record.type);
-                                $('#check_point').text(data.Record.check_point);
-                                $('#crime_detail').text(data.Record.crime_detail);
-                                $('#create_date').text(data.Record.create_date);
-                                $('#update_date').text(data.Record.update_date);
-
-                                $.each(data.Record.image, function () {
-                                    $('#image').append('<li><center><img src="/image/' + this + '.jpg" /></center></li>');
-                                });
-
-                                // Show Image
-                                if (data.Record.image.length !== 0) {
-                                    $('.bxslider').bxSlider();
-                                }
 
 
                                 if (data.Record.access) {
@@ -114,7 +129,7 @@
                     } else {
                         $('body > *').not('#append').hide();
                         var pk = prompt("กรุณากรอกเลขที่คดี", "เลขที่คดี");
-                        if (pk.match([0-9])) {
+                        if (pk.match([0 - 9])) {
                             window.location.href = "index.html?pk=" + pk;
                         }
                     }
@@ -128,79 +143,96 @@
                         'localhost' +
                         '%2FWeb-app%2Fcrime%2Findex.html%3Fpk%3D' +
                         pk +
-                        '&layout=button_count" frameborder="0" ></iframe>'
+                        '&layout=button_count" frameborder="0" style="height: 20px;"></iframe>'
                         );
 
-                $('#QR').attr('src', 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=0&data=' + window.location.href);
             });
         </script>
-        <style>
-            #gmap {
-                width: 100%;
-                height: 500px;
-            }
-        </style>
     </head>
     <body>
         <div class="container">
-            <div id="gmap" class="gmap3" >
+            <div id="topic" class="row">
+                <h3 style="text-align: center;">อาชญากรรมเลขที่ <span id="pk"></span></h3>
             </div>
-            <div class="row">
-                <div class="col-xs-4 col-lg-2">คดีเลขที่:</div>
-                <div id="pk" class="col-xs-8 col-lg-10"></div>
+            <div id="imgMap" style="text-align: center;" ></div>
+            <div id="gmap" class="gmap3 hidden-print" ></div>
+
+            <div id="material" class="row">
+                <div class="col-lg-6 col-sm-12">
+                    <div class="row">
+                        <div class="col-lg-6 col-xs-6">ประเภทคดี: </div>
+                        <div class="col-lg-6 col-xs-6"><div id="type">-</div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-xs-6">วันที่เกิดเหตุ: </div>
+                        <div class="col-lg-6 col-xs-6"><div id="crime_date">-</div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-xs-6">จุดตรวจ: </div>
+                        <div class="col-lg-6 col-xs-6"><div id="check_point">-</div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-xs-6">ช่วงเวลา: </div>
+                        <div class="col-lg-6 col-xs-6"><div id="time">-</div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-xs-6">เขตพื้นที่: </div>
+                        <div class="col-lg-6 col-xs-6"><div id="area">-</div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-xs-6">ประเภทสถานที่: </div>
+                        <div class="col-lg-6 col-xs-6"><div id="place">-</div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-12">รายละเอียด: </div></div>
+                    <div class="row">
+                        <div class="col-lg-12"><div id="crime_detail">-</div></div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-xs-12">
+                    <div class="row">
+                        <div class="col-lg-6 col-xs-12">เจ้าหน้าที่ผู้รับผิดชอบคดี: </div>
+                        <div class="col-lg-6 col-xs-12"><div id="person">-</div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-xs-6">วันที่เพิ่ม: </div>
+                        <div class="col-lg-3 col-xs-6"><div id="create_date">-</div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-xs-6 visible-user">เพิ่มโดย: </div>
+                        <div class="col-lg-3 col-xs-6 visible-user"><div id="create_by_user">-</div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-xs-6 visible-user">วันที่แก้ไข: </div>
+                        <div class="col-lg-3 col-xs-6 visible-user"><div id="update_date">-</div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-xs-6 visible-user">แก้ไขโดย: </div>
+                        <div class="col-lg-3 col-xs-6 visible-user"><div id="update_by_user">-</div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-3 col-xs-6 visible-user">ระดับการเข้าถึง: </div>
+                        <div class="col-lg-3 col-xs-6 visible-user"><div id="crime_level">-</div></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-lg-6 col-xs-12  hidden-print">
+                            <input type="button" id="butEdit" value="แก้ไข" class="btn btn-default visible-user" />
+                            <input type="button" id="butDel" value="ลบ" class="btn btn-default visible-user" />
+                            <button id="btn-print" type="button" class="btn btn-default btn-lg hidden-print" onclick="window.print();">
+                                <span class="glyphicon glyphicon-print" aria-hidden="true"></span><span class="hidden-xs hidden-sm"> พิมพ์</span>
+                            </button>
+                            <div id="butFacebookShare" ></div>
+                        </div>
+                        <div class="col-lg-6 col-xs-12 visible-md visible-lg">
+                            <img id="QR">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="row">
-                เขตพื้นที่: <div id="area">-</div>
+            <ul id="image" class="bxslider"></ul>
+            <div id="img-for-print" class="row visible-print-inline-block" style="text-align: center;">
+                <h3 style="text-align: center;">ภาพประกอบอาชญากรรม</h3>
             </div>
-            <div class="row">
-                วันที่เกิดเหตุ: <div id="crime_date">-</div>
-            </div>
-            <div class="row">
-                สถานที่: <div id="place">-</div>
-            </div>
-            <div class="row">
-                ช่วงเวลา: <div id="time">-</div>
-            </div>
-            <div class="row">
-                ประเภทคดี: <div id="type">-</div>
-            </div>
-            <div class="row">
-                จุดตรวจ: <div id="check_point">-</div>
-            </div>
-            <!--                <div class="row">
-                                เจ้าหน้าที่ผู้รับผิดชอบคดี: <div id="person">-</div>
-                            </div>-->
-            <div class="row">
-                รายละเอียด: <div id="crime_detail">-</div>    
-            </div>
-            <div class="row visible-user">                    
-                เพิ่มโดย: <div id="create_by_user">-</div>
-            </div>
-            <div class="row">
-                วันที่เพิ่ม:<div id="create_date">-</div>
-            </div>
-            <div class="row visible-user">
-                แก้ไขโดย: <div id="update_by_user">-</div>
-            </div>
-            <div class="row">
-                วันที่แก้ไข: <div id="update_date">-</div>
-            </div>
-            <div class="row">
-                <div id="txtCrimeLevel" class="visible-user">ระดับการเข้าถึง: <div id="crime_level">-</div></div>
-            </div>
-            <div class="row">
-                <ul id="image" class="bxslider"></ul>
-            </div>
-            <div class="row visible-user">
-                <input type="button" id="butEdit" value="แก้ไข" class="btn btn-default" />
-                <input type="button" id="butDel" value="ลบ" class="btn btn-default" />
-            </div>
-            <div class="row">
-                <img id="QR">
-            </div>
-        </div>
-        <div class="row">
-            <div id="butFacebookShare" ></div>
         </div>
     </body>
     <script src="/Web-app/libs/bootstrap-3.3.1/js/bootstrap.min.js" type="text/javascript"></script>

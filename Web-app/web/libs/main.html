@@ -90,15 +90,15 @@
                 '<div id="dialogChangePassword" >' +
                 '<div class="form-group">' +
                 '<label for="txtOldPassword">รหัสผ่านเดิม</label>' +
-                '<input class="form-control" type="password" id="txtOldPassword" placeholder="Password" />' +
+                '<input class="form-control" type="password" id="txtOldPassword" placeholder="รหัสผ่าน" />' +
                 '</div>' +
                 '<div class="form-group">' +
                 '<label for="txtNewPassword">รหัสผ่านใหม่</label>' +
-                '<input class="form-control" type="password" id="txtNewPassword" placeholder="Password" />' +
+                '<input class="form-control" type="password" id="txtNewPassword" placeholder="รหัสผ่าน" />' +
                 '</div>' +
                 '<div class="form-group">' +
                 '<label for="txtConfirmNewPassword">ยืนยันรหัสผ่าน</label>' +
-                '<input class="form-control" type="password" id="txtConfirmNewPassword" placeholder="Password" />' +
+                '<input class="form-control" type="password" id="txtConfirmNewPassword" placeholder="รหัสผ่าน" />' +
                 '</div>' +
                 '</div>'
                 );
@@ -115,22 +115,6 @@
                         location.reload();
                     } else {
                         alert(data.Message);
-                    }
-                });
-            }
-        });
-
-        $('#lnkForgetPassword').on('click', function () {
-            var eMail = prompt("ตั่งรหัสผ่านใหม่", "กรอกที่อยู่อีเมลล์");
-
-            if (eMail != null) {
-                $.post(url + "UserService/forgetPassword", {"e_mail": eMail}, function (data) {
-                    if (data.Result == "OK") {
-                        alert("ระบบได้ทำการตั่งรหัสผ่านใหม่และส่งรหัสผ่านไปทางอีเมลล์เรียบร้อยแล้ว...");
-                        return true;
-                    } else {
-                        alert(data.Message);
-                        return false;
                     }
                 });
             }
@@ -154,6 +138,22 @@
                 }
             });
             return false;
+        });
+        
+        $('.cmd-forgot-pwd').on('click', function() {
+            var eMail = prompt("ตั่งรหัสผ่านใหม่", "กรอกที่อยู่อีเมลล์");
+
+            if (eMail !== null) {
+                $.post(url + "UserService/forgetPassword", {"e_mail": eMail}, function (data) {
+                    if (data.Result === "OK") {
+                        alert("ระบบได้ทำการตั่งรหัสผ่านใหม่และส่งรหัสผ่านไปทางอีเมลล์เรียบร้อยแล้ว...");
+                        return true;
+                    } else {
+                        alert(data.Message);
+                        return false;
+                    }
+                });
+            }
         });
 
         Date.prototype.yyyymmdd = function () {
